@@ -90,13 +90,12 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
 .result-section-content p{margin-bottom:12px}
 .result-section-content p:last-child{margin-bottom:0}
 
-/* Dimension items */
-.dim-item{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--border)}
-.dim-item:last-child{border-bottom:none}
-.dim-name{font-family:var(--serif);font-size:13px;color:var(--text);width:60px;flex-shrink:0;text-align:right;letter-spacing:1px}
-.dim-bar-wrap{flex:1;height:6px;background:rgba(196,162,101,.1);border-radius:3px;overflow:hidden}
-.dim-bar{height:100%;background:linear-gradient(90deg,var(--gold),var(--brown));border-radius:3px;transition:width 1s ease-out}
-.dim-desc{font-size:11px;color:var(--sub);width:120px;flex-shrink:0}
+/* Radar dims (compact 5-model summary under radar) */
+.radar-dims{margin-top:16px;text-align:left;padding:0 8px}
+.radar-dim-row{display:flex;align-items:baseline;gap:6px;padding:6px 0;font-size:13px}
+.radar-dim-name{font-family:var(--serif);font-weight:700;color:var(--text);white-space:nowrap}
+.radar-dim-sep{color:var(--gold)}
+.radar-dim-desc{color:var(--sub);font-size:12px}
 
 /* Match cards */
 .match-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
@@ -220,12 +219,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
       <div class="radar-section" id="radarSection">
         <div class="radar-title">梦境灵魂图谱</div>
         <div class="radar-svg" id="radarChart"></div>
-      </div>
-
-      <!-- Dimension readings -->
-      <div class="result-section" id="dimSection">
-        <div class="result-section-title">维度解读</div>
-        <div id="dimReadings"></div>
+        <div class="radar-dims" id="radarDims"></div>
       </div>
 
       <!-- Description -->
@@ -475,17 +469,23 @@ function renderRadar(levels){
 }
 
 function renderDimReadings(levels){
-  const container=document.getElementById('dimReadings');container.innerHTML='';
+  const container=document.getElementById('radarDims');container.innerHTML='';
+  const modelDesc={
+    '潮汐感':'梦境的深度、频率与清晰程度',
+    '灼烧感':'梦中情绪的温度与强度',
+    '折叠度':'梦境世界的奇幻与扭曲程度',
+    '觉知力':'梦中自我的清醒与掌控程度',
+    '通感力':'梦境与现实之间的共振程度'
+  };
+  const levelText={'H':'偏强','M':'适中','L':'偏弱'};
   DATA.dimension_groups.forEach(g=>{
-    g.dims.forEach(d=>{
-      const dim=DATA.dimensions.find(x=>x.id===d);
-      if(!dim)return;
-      const level=levels[d]||'M';
-      const pct=level==='H'?85:(level==='M'?50:20);
-      container.innerHTML+=`<div class="dim-item"><span class="dim-name">${dim.name}</span><div class="dim-bar-wrap"><div class="dim-bar" style="width:0%" data-target="${pct}"></div></div><span class="dim-desc">${dim.description}</span></div>`;
-    });
+    const groupLevels=g.dims.map(d=>levels[d]||'M');
+    const hCount=groupLevels.filter(l=>l==='H').length;
+    const lCount=groupLevels.filter(l=>l==='L').length;
+    const dominant=hCount>=2?'H':(lCount>=2?'L':'M');
+    const desc=modelDesc[g.name]||'';
+    container.innerHTML+=`<div class="radar-dim-row"><span class="radar-dim-name">${g.name}</span><span class="radar-dim-sep">·</span><span class="radar-dim-desc">${desc}</span></div>`;
   });
-  setTimeout(()=>{container.querySelectorAll('.dim-bar').forEach(b=>{b.style.width=b.dataset.target+'%'})},200);
 }
 
 // ===== SHARE =====
