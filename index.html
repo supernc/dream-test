@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>梦境人格测试 - 你的梦境人格是？</title>
+<meta name="description" content="12道题，解锁你的梦境密码。探索你的梦境人格类型。">
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<style>
+/* ===== Reset & Base ===== */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background: #0a0a2e;
+  color: #e0e0ff;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Background Stars ===== */
+.stars-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.star {
+  position: absolute;
+  border-radius: 50%;
+  background: #fff;
+  animation: twinkle var(--duration) ease-in-out infinite alternate;
+  opacity: 0;
+}
+
+@keyframes twinkle {
+  0% { opacity: 0.1; transform: scale(0.8); }
+  100% { opacity: var(--max-opacity); transform: scale(1.2); }
+}
+
+/* Floating orbs */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(40px);
+  animation: floatOrb var(--duration) ease-in-out infinite alternate;
+  opacity: 0.15;
+}
+
+@keyframes floatOrb {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(var(--tx), var(--ty)) scale(1.2); }
+}
+
+/* ===== Page Sections ===== */
+.page {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+  padding: 20px;
+}
+
+.page.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ===== Welcome Page ===== */
+.welcome-content {
+  text-align: center;
+  animation: fadeInUp 1s ease-out;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.welcome-icon {
+  font-size: 64px;
+  margin-bottom: 20px;
+  animation: floatIcon 3s ease-in-out infinite;
+}
+
+@keyframes floatIcon {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+
+.welcome-title {
+  font-size: clamp(28px, 7vw, 42px);
+  font-weight: 800;
+  background: linear-gradient(135deg, #667eea, #f093fb, #764ba2);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 4s ease infinite;
+  margin-bottom: 16px;
+  line-height: 1.3;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.welcome-subtitle {
+  font-size: clamp(14px, 3.5vw, 18px);
+  color: rgba(224, 224, 255, 0.7);
+  margin-bottom: 40px;
+  letter-spacing: 2px;
+}
+
+.btn-start {
+  display: inline-block;
+  padding: 16px 48px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  letter-spacing: 2px;
+}
+
+.btn-start:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 40px rgba(102, 126, 234, 0.4);
+}
+
+.btn-start:active {
+  transform: translateY(0);
+}
+
+.btn-start::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+  transform: rotate(45deg);
+  animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) rotate(45deg); }
+}
+
+.welcome-hint {
+  margin-top: 24px;
+  font-size: 13px;
+  color: rgba(224, 224, 255, 0.4);
+}
+
+/* ===== Quiz Page ===== */
+.quiz-header {
+  width: 100%;
+  max-width: 500px;
+  margin-bottom: 32px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #667eea, #f093fb);
+  border-radius: 2px;
+  transition: width 0.5s ease;
+  width: 0%;
+}
+
+.progress-text {
+  text-align: center;
+  font-size: 13px;
+  color: rgba(224, 224, 255, 0.5);
+}
+
+.quiz-card {
+  width: 100%;
+  max-width: 500px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 32px 24px;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.quiz-card.fade-out {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+.quiz-card.fade-in {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+.quiz-card.fade-in.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.question-number {
+  font-size: 13px;
+  color: #f093fb;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  margin-bottom: 12px;
+}
+
+.question-text {
+  font-size: clamp(18px, 4.5vw, 22px);
+  font-weight: 600;
+  line-height: 1.5;
+  margin-bottom: 28px;
+  color: #fff;
+}
+
+.options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.option-btn {
+  width: 100%;
+  padding: 16px 20px;
+  font-size: 15px;
+  line-height: 1.4;
+  color: rgba(224, 224, 255, 0.9);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.option-btn:hover {
+  background: rgba(102, 126, 234, 0.15);
+  border-color: rgba(102, 126, 234, 0.4);
+  transform: translateX(4px);
+}
+
+.option-btn:active {
+  transform: scale(0.98);
+}
+
+.option-btn.selected {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3));
+  border-color: #667eea;
+  color: #fff;
+}
+
+.option-btn.selected::before {
+  content: '✓';
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #f093fb;
+  font-weight: bold;
+}
+
+/* ===== Loading Page ===== */
+.loading-content {
+  text-align: center;
+}
+
+.loading-orb {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 32px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #f093fb, #667eea, #764ba2);
+  animation: pulseOrb 2s ease-in-out infinite, rotateOrb 6s linear infinite;
+  box-shadow: 0 0 60px rgba(102, 126, 234, 0.4), 0 0 120px rgba(240, 147, 251, 0.2);
+}
+
+@keyframes pulseOrb {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 60px rgba(102, 126, 234, 0.4), 0 0 120px rgba(240, 147, 251, 0.2); }
+  50% { transform: scale(1.1); box-shadow: 0 0 80px rgba(102, 126, 234, 0.6), 0 0 160px rgba(240, 147, 251, 0.3); }
+}
+
+@keyframes rotateOrb {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+
+.loading-text {
+  font-size: 18px;
+  color: rgba(224, 224, 255, 0.8);
+  animation: fadeInOut 2s ease-in-out infinite;
+}
+
+@keyframes fadeInOut {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+.loading-dots::after {
+  content: '';
+  animation: dots 1.5s steps(4, end) infinite;
+}
+
+@keyframes dots {
+  0% { content: ''; }
+  25% { content: '.'; }
+  50% { content: '..'; }
+  75% { content: '...'; }
+}
+
+/* ===== Result Page ===== */
+#page-result {
+  overflow-y: auto;
+  justify-content: flex-start;
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+.result-container {
+  width: 100%;
+  max-width: 500px;
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.result-card {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: 36px 24px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.result-emoji {
+  font-size: 72px;
+  margin-bottom: 16px;
+  animation: floatIcon 3s ease-in-out infinite;
+}
+
+.result-type-code {
+  display: inline-block;
+  padding: 4px 16px;
+  font-size: 13px;
+  letter-spacing: 4px;
+  color: #f093fb;
+  border: 1px solid rgba(240, 147, 251, 0.3);
+  border-radius: 20px;
+  margin-bottom: 12px;
+}
+
+.result-name {
+  font-size: clamp(24px, 6vw, 32px);
+  font-weight: 800;
+  background: linear-gradient(135deg, #667eea, #f093fb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 20px;
+}
+
+.result-desc {
+  font-size: 15px;
+  line-height: 1.8;
+  color: rgba(224, 224, 255, 0.75);
+  margin-bottom: 24px;
+}
+
+.result-section {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.result-section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f093fb;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.result-section-content {
+  font-size: 14px;
+  line-height: 1.7;
+  color: rgba(224, 224, 255, 0.7);
+  padding-left: 4px;
+}
+
+.result-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.result-tag {
+  display: inline-block;
+  padding: 4px 12px;
+  font-size: 12px;
+  background: rgba(102, 126, 234, 0.15);
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  border-radius: 20px;
+  color: rgba(224, 224, 255, 0.8);
+}
+
+.result-color-bar {
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  margin-top: 8px;
+}
+
+.result-partner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 12px;
+  margin-top: 8px;
+}
+
+.result-partner-emoji {
+  font-size: 32px;
+}
+
+.result-partner-info {
+  flex: 1;
+}
+
+.result-partner-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.result-partner-desc {
+  font-size: 12px;
+  color: rgba(224, 224, 255, 0.5);
+  margin-top: 2px;
+}
+
+/* Action buttons */
+.result-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.btn-share, .btn-restart {
+  flex: 1;
+  padding: 14px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 1px;
+}
+
+.btn-share {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+}
+
+.btn-share:hover {
+  box-shadow: 0 8px 30px rgba(102, 126, 234, 0.4);
+  transform: translateY(-2px);
+}
+
+.btn-restart {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(224, 224, 255, 0.8);
+}
+
+.btn-restart:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-2px);
+}
+
+/* Share card (for html2canvas capture) */
+.share-card-wrapper {
+  position: fixed;
+  top: -9999px;
+  left: -9999px;
+  z-index: -1;
+}
+
+.share-card {
+  width: 375px;
+  padding: 40px 28px;
+  background: linear-gradient(160deg, #0a0a2e 0%, #1a1a4e 40%, #2a1a4e 100%);
+  color: #e0e0ff;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+}
+
+.share-card-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.share-card-emoji {
+  font-size: 56px;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.share-card-name {
+  font-size: 24px;
+  font-weight: 800;
+  color: #f093fb;
+  margin-bottom: 6px;
+}
+
+.share-card-code {
+  font-size: 13px;
+  letter-spacing: 4px;
+  color: rgba(224, 224, 255, 0.5);
+}
+
+.share-card-desc {
+  font-size: 14px;
+  line-height: 1.7;
+  color: rgba(224, 224, 255, 0.75);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.share-card-traits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.share-card-trait {
+  padding: 4px 14px;
+  font-size: 12px;
+  background: rgba(102, 126, 234, 0.2);
+  border-radius: 20px;
+  color: rgba(224, 224, 255, 0.8);
+}
+
+.share-card-divider {
+  width: 40px;
+  height: 2px;
+  background: linear-gradient(90deg, #667eea, #f093fb);
+  margin: 0 auto 20px;
+  border-radius: 1px;
+}
+
+.share-card-footer {
+  text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.share-card-footer-title {
+  font-size: 14px;
+  color: rgba(224, 224, 255, 0.6);
+  margin-bottom: 4px;
+}
+
+.share-card-footer-sub {
+  font-size: 11px;
+  color: rgba(224, 224, 255, 0.3);
+}
+
+/* Toast notification */
+.toast {
+  position: fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  padding: 12px 24px;
+  background: rgba(102, 126, 234, 0.9);
+  backdrop-filter: blur(10px);
+  color: #fff;
+  font-size: 14px;
+  border-radius: 12px;
+  z-index: 1000;
+  opacity: 0;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Responsive adjustments */
+@media (max-width: 360px) {
+  .quiz-card {
+    padding: 24px 16px;
+  }
+  .result-card {
+    padding: 28px 16px;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Stars Background -->
+<div class="stars-container" id="starsContainer"></div>
+
+<!-- Page 1: Welcome -->
+<div class="page active" id="page-welcome">
+  <div class="welcome-content">
+    <div class="welcome-icon">🌙</div>
+    <h1 class="welcome-title">你的梦境人格是？</h1>
+    <p class="welcome-subtitle">12道题，解锁你的梦境密码</p>
+    <button class="btn-start" onclick="startQuiz()">开始探索 ✦</button>
+    <p class="welcome-hint">大约需要 2 分钟</p>
+  </div>
+</div>
+
+<!-- Page 2: Quiz -->
+<div class="page" id="page-quiz">
+  <div class="quiz-header">
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <div class="progress-text" id="progressText">1 / 12</div>
+  </div>
+  <div class="quiz-card" id="quizCard">
+    <div class="question-number" id="questionNumber">QUESTION 01</div>
+    <div class="question-text" id="questionText">Loading...</div>
+    <div class="options-list" id="optionsList"></div>
+  </div>
+</div>
+
+<!-- Page 3: Loading -->
+<div class="page" id="page-loading">
+  <div class="loading-content">
+    <div class="loading-orb"></div>
+    <p class="loading-text">正在解析你的梦境<span class="loading-dots"></span></p>
+  </div>
+</div>
+
+<!-- Page 4: Result -->
+<div class="page" id="page-result">
+  <div class="result-container">
+    <div class="result-card" id="resultCard">
+      <div class="result-emoji" id="resultEmoji">🌙</div>
+      <div class="result-type-code" id="resultTypeCode">----</div>
+      <h2 class="result-name" id="resultName">加载中...</h2>
+      <p class="result-desc" id="resultDesc"></p>
+
+      <div class="result-section">
+        <div class="result-section-title">🌌 梦境特征</div>
+        <div class="result-section-content" id="resultTraits"></div>
+      </div>
+
+      <div class="result-section">
+        <div class="result-section-title">💡 觉醒建议</div>
+        <div class="result-section-content" id="resultAdvice"></div>
+      </div>
+
+      <div class="result-section">
+        <div class="result-section-title">🎨 代表色</div>
+        <div class="result-color-bar" id="resultColorBar"></div>
+        <div class="result-section-content" id="resultColorName" style="margin-top:8px;"></div>
+      </div>
+
+      <div class="result-section">
+        <div class="result-section-title">🤝 最佳梦境搭档</div>
+        <div class="result-partner" id="resultPartner">
+          <div class="result-partner-emoji" id="partnerEmoji">🌙</div>
+          <div class="result-partner-info">
+            <div class="result-partner-name" id="partnerName">---</div>
+            <div class="result-partner-desc" id="partnerDesc">---</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="result-section">
+        <div class="result-section-title">🏷️ 标签</div>
+        <div class="result-tags" id="resultTagsContainer"></div>
+      </div>
+    </div>
+
+    <div class="result-actions">
+      <button class="btn-share" onclick="generateShareCard()">📸 生成分享卡片</button>
+      <button class="btn-restart" onclick="restartQuiz()">🔄 重新测试</button>
+    </div>
+  </div>
+</div>
+
+<!-- Share Card (offscreen, for html2canvas) -->
+<div class="share-card-wrapper" id="shareCardWrapper">
+  <div class="share-card" id="shareCard">
+    <div class="share-card-header">
+      <span class="share-card-emoji" id="shareEmoji">🌙</span>
+      <div class="share-card-name" id="shareName">---</div>
+      <div class="share-card-code" id="shareCode">----</div>
+    </div>
+    <div class="share-card-desc" id="shareDesc"></div>
+    <div class="share-card-traits" id="shareTraits"></div>
+    <div class="share-card-divider"></div>
+    <div class="share-card-footer">
+      <div class="share-card-footer-title">🌙 梦境人格测试</div>
+      <div class="share-card-footer-sub">扫码测测你的梦境人格</div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== DATA =====
+const quizData = {
+  questions: [
+    {
+      id: 1, text: "早上醒来，你对昨晚的梦还记得多少？",
+      options: [
+        { text: "画面清晰得像刚看完一部电影，连细节都记得", scores: { xu_shi: -1, ming_an: 1, du_qun: 0, kong_sui: 1 } },
+        { text: "只剩下一种模糊的感觉，像雾里看花", scores: { xu_shi: 1, ming_an: -1, du_qun: 1, kong_sui: -1 } },
+        { text: "记得几个关键片段，像拼图少了几块", scores: { xu_shi: 0, ming_an: 0, du_qun: -1, kong_sui: 1 } },
+        { text: "几乎不记得，但醒来时心情会被影响", scores: { xu_shi: 1, ming_an: -1, du_qun: 0, kong_sui: -2 } }
+      ]
+    },
+    {
+      id: 2, text: "你大概多久会做一次印象深刻的梦？",
+      options: [
+        { text: "几乎每天都有，我的夜晚比白天还精彩", scores: { xu_shi: 1, ming_an: 1, du_qun: 0, kong_sui: 1 } },
+        { text: "一周几次吧，偶尔有大片级别的", scores: { xu_shi: 0, ming_an: 1, du_qun: -1, kong_sui: 0 } },
+        { text: "不太频繁，但一做就是那种特别离谱的", scores: { xu_shi: 2, ming_an: 0, du_qun: 1, kong_sui: -1 } },
+        { text: "很少做梦，或者说很少记得", scores: { xu_shi: -1, ming_an: -1, du_qun: 0, kong_sui: -1 } }
+      ]
+    },
+    {
+      id: 3, text: "你的梦境场景通常是什么样的？",
+      options: [
+        { text: "完全架空的奇幻世界——会飞的鲸鱼、倒悬的城市", scores: { xu_shi: 2, ming_an: 1, du_qun: 1, kong_sui: 0 } },
+        { text: "基本是现实场景，学校、公司、家里，但有点扭曲", scores: { xu_shi: -2, ming_an: 0, du_qun: -1, kong_sui: 0 } },
+        { text: "自然场景居多——大海、森林、星空、旷野", scores: { xu_shi: 1, ming_an: 1, du_qun: 2, kong_sui: -1 } },
+        { text: "密闭空间或复杂建筑——迷宫、电梯、地下通道", scores: { xu_shi: 0, ming_an: -2, du_qun: 0, kong_sui: 1 } }
+      ]
+    },
+    {
+      id: 4, text: "梦里突然场景切换了，你的反应是？",
+      options: [
+        { text: "完全不觉得奇怪，自然就接受了新场景", scores: { xu_shi: 1, ming_an: 0, du_qun: 0, kong_sui: -2 } },
+        { text: "会愣一下，但很快适应继续剧情", scores: { xu_shi: 0, ming_an: 1, du_qun: -1, kong_sui: -1 } },
+        { text: "我好像能察觉到\u201c这是梦\u201d，但选择继续看下去", scores: { xu_shi: 1, ming_an: 1, du_qun: 1, kong_sui: 2 } },
+        { text: "场景切换让我很不安，感觉失去了控制", scores: { xu_shi: -1, ming_an: -2, du_qun: 0, kong_sui: 1 } }
+      ]
+    },
+    {
+      id: 5, text: "在梦里你最常体验到的情绪是？",
+      options: [
+        { text: "兴奋和好奇，像在探索一个新世界", scores: { xu_shi: 1, ming_an: 2, du_qun: 1, kong_sui: 1 } },
+        { text: "紧张和焦虑，总觉得有什么事要发生", scores: { xu_shi: -1, ming_an: -2, du_qun: 0, kong_sui: -1 } },
+        { text: "温暖和平静，像泡在温泉里", scores: { xu_shi: 0, ming_an: 2, du_qun: -1, kong_sui: -1 } },
+        { text: "困惑和迷茫，不知道自己该做什么", scores: { xu_shi: 1, ming_an: -1, du_qun: 1, kong_sui: -2 } }
+      ]
+    },
+    {
+      id: 6, text: "如果梦里出现了让你害怕的东西，你通常会？",
+      options: [
+        { text: "直面它！梦里的我比现实勇敢多了", scores: { xu_shi: 0, ming_an: 1, du_qun: 0, kong_sui: 2 } },
+        { text: "拼命逃跑，而且腿还像灌了铅一样跑不动", scores: { xu_shi: -1, ming_an: -2, du_qun: 0, kong_sui: -2 } },
+        { text: "呼唤同伴或寻找帮助，梦里总有人会出现", scores: { xu_shi: 0, ming_an: 0, du_qun: -2, kong_sui: -1 } },
+        { text: "观察分析它，害怕的同时带着一种奇怪的好奇", scores: { xu_shi: 2, ming_an: 0, du_qun: 2, kong_sui: 1 } }
+      ]
+    },
+    {
+      id: 7, text: "你的梦里通常都有哪些人？",
+      options: [
+        { text: "基本是我一个人的独角戏", scores: { xu_shi: 1, ming_an: 0, du_qun: 2, kong_sui: 1 } },
+        { text: "现实中认识的人——家人、朋友、同事", scores: { xu_shi: -2, ming_an: 1, du_qun: -2, kong_sui: 0 } },
+        { text: "从没见过的陌生人，但梦里觉得好像认识", scores: { xu_shi: 2, ming_an: 0, du_qun: -1, kong_sui: -1 } },
+        { text: "有时是人，有时是奇怪的生物或抽象的存在", scores: { xu_shi: 2, ming_an: -1, du_qun: 1, kong_sui: 0 } }
+      ]
+    },
+    {
+      id: 8, text: "在梦里，你和其他角色的关系通常是？",
+      options: [
+        { text: "我是主角，其他人都围着我的故事线走", scores: { xu_shi: 0, ming_an: 1, du_qun: 1, kong_sui: 2 } },
+        { text: "大家一起冒险或完成某个任务，像队友一样", scores: { xu_shi: 0, ming_an: 1, du_qun: -2, kong_sui: 1 } },
+        { text: "我更像旁观者，看着事情发生但很少参与", scores: { xu_shi: 1, ming_an: -1, du_qun: 2, kong_sui: -2 } },
+        { text: "关系很混乱，一会儿是朋友一会儿是对手", scores: { xu_shi: 1, ming_an: -1, du_qun: -1, kong_sui: -1 } }
+      ]
+    },
+    {
+      id: 9, text: "做了一个特别精彩的梦醒来后，你的第一反应是？",
+      options: [
+        { text: "闭上眼想续上剧情，太上头了不想醒", scores: { xu_shi: 2, ming_an: 1, du_qun: 0, kong_sui: -1 } },
+        { text: "赶紧拿手机记下来，这素材不能浪费", scores: { xu_shi: 1, ming_an: 1, du_qun: 1, kong_sui: 2 } },
+        { text: "跟朋友分享\u201c我昨晚做了个巨离谱的梦\u201d", scores: { xu_shi: 0, ming_an: 2, du_qun: -2, kong_sui: 0 } },
+        { text: "琢磨这个梦是不是有什么深层含义", scores: { xu_shi: -1, ming_an: -1, du_qun: 1, kong_sui: 1 } }
+      ]
+    },
+    {
+      id: 10, text: "你有没有过分不清梦境和现实的时刻？",
+      options: [
+        { text: "经常！有时候会怀疑某件事到底是不是真的发生过", scores: { xu_shi: 2, ming_an: 0, du_qun: 0, kong_sui: -2 } },
+        { text: "偶尔，某个场景会让我突然想起\u201c这好像是梦里见过\u201d", scores: { xu_shi: 1, ming_an: 0, du_qun: 0, kong_sui: -1 } },
+        { text: "不会，梦就是梦，我分得很清楚", scores: { xu_shi: -2, ming_an: 1, du_qun: 0, kong_sui: 2 } },
+        { text: "有时候梦的情绪会带到白天，影响一整天的心情", scores: { xu_shi: 0, ming_an: -2, du_qun: -1, kong_sui: -1 } }
+      ]
+    },
+    {
+      id: 11, text: "以下哪种\u201c经典梦境\u201d你做过最多次？",
+      options: [
+        { text: "飞翔！在城市上空或云层间自由翱翔", scores: { xu_shi: 1, ming_an: 2, du_qun: 1, kong_sui: 2 } },
+        { text: "迟到或赶不上某个东西——考试、飞机、公交", scores: { xu_shi: -2, ming_an: -1, du_qun: 0, kong_sui: -2 } },
+        { text: "在陌生的地方迷路，怎么走都走不出去", scores: { xu_shi: 1, ming_an: -1, du_qun: 2, kong_sui: -1 } },
+        { text: "和某个人的重逢或告别", scores: { xu_shi: -1, ming_an: 0, du_qun: -2, kong_sui: 0 } }
+      ]
+    },
+    {
+      id: 12, text: "如果你的梦境有个主题色，你觉得会是？",
+      options: [
+        { text: "星空紫或极光蓝——神秘而辽阔", scores: { xu_shi: 2, ming_an: 1, du_qun: 2, kong_sui: 0 } },
+        { text: "暖阳橙或金色——温暖而明亮", scores: { xu_shi: -1, ming_an: 2, du_qun: -1, kong_sui: 1 } },
+        { text: "深海蓝或墨绿——深邃而安静", scores: { xu_shi: 1, ming_an: -1, du_qun: 1, kong_sui: -1 } },
+        { text: "雾灰或月白——朦胧而不确定", scores: { xu_shi: 0, ming_an: -1, du_qun: 0, kong_sui: -2 } }
+      ]
+    }
+  ],
+  results: {
+    "虚明独控": {
+      name: "星际漫游者", emoji: "🚀",
+      description: "你的梦境是一座私人太空站——绚丽、辽阔，而且完全由你掌控。别人在梦里跌跌撞撞，你却能在星际间自如穿梭，改写剧本。你的潜意识像一个永不关机的创意引擎，白天压抑的想象力在夜晚全面释放。你不只是在做梦，你是在导演一部只属于自己的科幻大片。",
+      traits: "经常梦到飞行、太空、未知星球，画面感极强且色彩明亮，常常能在梦中意识到自己在做梦并主动改变剧情走向。",
+      advice: "你的梦是灵感宝库，醒来先录一段语音备忘。",
+      partner: { code: "实暗群随", name: "末班车乘客", emoji: "🚃", reason: "你的绚烂填补TA的灰暗，TA的真实锚定你的虚幻" },
+      color: { name: "宇宙紫", hex: "#6C5CE7" },
+      tags: ["清醒梦体质", "脑内大片", "创意引擎", "星际导演"]
+    },
+    "虚明独随": {
+      name: "云端拾光者", emoji: "☁️",
+      description: "你的梦像一幅流动的水彩画——美丽、明亮，但从不停留。你不需要在梦里做什么惊天大事，光是飘浮在云端看风景就够了。你的潜意识像个佛系艺术家，不追求控制，只享受过程。朋友听你描述梦境时总说\u2018太美了吧\u2019，然后你微微一笑：每晚都是这样。",
+      traits: "梦境多为明亮的自然奇观——极光、花海、云上日出，画面唯美但剧情随机，很少有明确的任务或目标。",
+      advice: "试试睡前冥想，你的梦会给你更多惊喜。",
+      partner: { code: "实暗群控", name: "暴风指挥官", emoji: "⛈️", reason: "你的诗意软化TA的刚强，TA的果断补全你的随性" },
+      color: { name: "天际蓝", hex: "#74B9FF" },
+      tags: ["佛系美梦", "水彩画风", "自然奇观", "漂浮体质"]
+    },
+    "虚明群控": {
+      name: "幻境造梦师", emoji: "🎭",
+      description: "你是梦境里的社牛天花板——不但能创造天马行空的奇幻世界，还能拉着一群角色跟你一起嗨。你的梦像一个大型多人在线游戏，而你是开服的GM。别人梦里被追着跑，你梦里是带队冲锋。你的脑子即使在睡觉时也闲不住，一定要搞点大事情。",
+      traits: "梦境常出现组队冒险、带领众人完成任务的场景，世界观宏大且奇幻，你在梦中往往是领导者或决策者的角色。",
+      advice: "把梦写成故事，你天生就是世界观架构师。",
+      partner: { code: "实暗独随", name: "旧巷拾忆人", emoji: "🚶", reason: "你的热闹治愈TA的孤寂，TA的沉静平衡你的躁动" },
+      color: { name: "幻境紫", hex: "#A29BFE" },
+      tags: ["梦境GM", "社牛天花板", "世界观架构师", "多人副本"]
+    },
+    "虚明群随": {
+      name: "泡泡宇宙旅客", emoji: "🫧",
+      description: "你的梦像一个温柔的嘉年华——色彩斑斓，人来人往，你在其中随意晃悠。你不需要目标也不需要方向，整个梦境就是一场巨大的社交漫游。你在梦里跟不存在的人聊天，去不存在的地方逛街，而且乐在其中。你的潜意识告诉你：快乐不需要理由。",
+      traits: "梦境氛围轻松愉快，常出现派对、市集、游乐场等热闹场景，身边总有人陪伴但剧情没有固定走向。",
+      advice: "你是朋友圈里的快乐源泉，记得也留点能量给自己。",
+      partner: { code: "实暗独控", name: "午夜复盘师", emoji: "🔍", reason: "你的轻松化解TA的焦虑，TA的专注提升你的效率" },
+      color: { name: "泡泡粉", hex: "#FD79A8" },
+      tags: ["快乐体质", "社交漫游", "嘉年华常客", "泡泡宇宙"]
+    },
+    "虚暗独控": {
+      name: "暗夜驯猎者", emoji: "🦇",
+      description: "你的梦是一座哥特风格的城堡——神秘、暗黑，但完全在你的掌控之中。当别人在噩梦里被吓醒，你却能冷静分析甚至反杀BOSS。你的潜意识像一个深夜档悬疑剧编剧，专门创造紧张刺激但逻辑缜密的剧情。你不怕黑暗，因为你就是暗夜里最强的猎手。",
+      traits: "梦境场景多为暗色调——深夜、地下城、迷雾森林，但你在其中保持清醒和主动，常常独自解谜或对抗某种神秘力量。",
+      advice: "你的内心比你以为的更强大，相信直觉。",
+      partner: { code: "实明群随", name: "暖光聚落客", emoji: "🏡", reason: "你的深邃迷住TA的好奇，TA的温暖照亮你的黑暗" },
+      color: { name: "暗夜黑", hex: "#2D3436" },
+      tags: ["噩梦猎手", "暗黑美学", "悬疑大师", "反杀体质"]
+    },
+    "虚暗独随": {
+      name: "深渊观星者", emoji: "🌑",
+      description: "你的梦像一部文艺电影的片尾——安静、深邃，带着一种说不清的忧伤美感。你独自漫步在梦境的深处，不挣扎也不逃跑，只是沉默地观察这个奇异的内心世界。你的潜意识像一口深井，表面平静，底下藏着整个星空。很多人害怕这样的梦，但你知道这里藏着最真实的自己。",
+      traits: "梦境幽深而抽象，常出现无尽的隧道、空旷的宇宙、深海等意象，情绪平静但带有淡淡的孤独感和哲学色彩。",
+      advice: "偶尔把梦境画下来，那是你灵魂的自画像。",
+      partner: { code: "实明群控", name: "人间清醒王", emoji: "👑", reason: "你的深度吸引TA的探索，TA的阳光驱散你的阴霾" },
+      color: { name: "深渊灰", hex: "#636E72" },
+      tags: ["深渊美学", "哲学梦者", "灵魂画手", "安静观察者"]
+    },
+    "虚暗群控": {
+      name: "迷雾领航员", emoji: "⚓",
+      description: "你的梦是一艘在暴风雨中前行的船——危险、混沌，但船舵始终在你手里。你的梦境常常有点暗黑，但你不是受害者，你是那个带着一群人在黑暗中找出路的人。你的潜意识有着极强的责任感和领导欲，即使在最荒诞的噩梦里，你也要当那个力挽狂澜的人。",
+      traits: "梦中常出现危机场景——风暴、追逐、末日，但你总是领导团队应对挑战，暗色调中带有强烈的使命感。",
+      advice: "不是所有重担都要你扛，梦里也可以休息。",
+      partner: { code: "实明独随", name: "晨光漫步者", emoji: "🌅", reason: "你的果敢保护TA的宁静，TA的从容融化你的紧绷" },
+      color: { name: "风暴蓝", hex: "#0984E3" },
+      tags: ["暗黑领袖", "使命感爆棚", "暴风船长", "危机处理者"]
+    },
+    "虚暗群随": {
+      name: "薄雾游魂", emoji: "🌫️",
+      description: "你的梦像一场没有剧本的默片——朦胧、暗沉，人影绰绰。你在梦里总是被一群人裹挟着走，去哪里、做什么都不太确定。你的潜意识像一片薄雾，包裹着很多未被消化的情绪和关系。这不是软弱，而是你的内心正在用最温柔的方式处理那些复杂的事。",
+      traits: "梦境模糊朦胧，常在人群中漂泊但感觉隔着一层纱，场景灰暗且缺乏明确方向，情绪基调为迷茫和不安。",
+      advice: "写日记吧，把梦里理不清的情绪在纸上理顺。",
+      partner: { code: "实明独控", name: "清醒筑梦家", emoji: "🏗️", reason: "你的柔软需要TA的笃定，TA的理性需要你的感性" },
+      color: { name: "薄雾灰", hex: "#B2BEC3" },
+      tags: ["情绪海绵", "默片风格", "薄雾体质", "温柔处理器"]
+    },
+    "实明独控": {
+      name: "清醒筑梦家", emoji: "🏗️",
+      description: "你的梦比很多人的现实都靠谱——场景真实、逻辑清晰，而且你还能在里面做决策。你可能是天生的清醒梦体质，梦对你来说不是混沌的意识流，而是大脑的加班会议。你在梦里复盘白天的事、预演明天的计划，简直是卷王本王。但说真的，这种掌控力也是一种天赋。",
+      traits: "梦境高度写实，常重现工作生活场景，你在梦中能做出理性决策，甚至解决现实中的问题，具有清醒梦倾向。",
+      advice: "梦不是用来加班的，偶尔允许自己做个荒唐的梦。",
+      partner: { code: "虚暗群随", name: "薄雾游魂", emoji: "🌫️", reason: "你的清醒引导TA的迷茫，TA的朦胧释放你的束缚" },
+      color: { name: "薄荷绿", hex: "#00CEC9" },
+      tags: ["梦中加班", "清醒梦体质", "卷王本王", "逻辑大师"]
+    },
+    "实明独随": {
+      name: "晨光漫步者", emoji: "🌅",
+      description: "你的梦像周末早晨的阳光——温暖、真实、不紧不慢。你常常梦到日常生活中的美好片段，遛狗、喝咖啡、在街角偶遇，平凡却让人舒服。你的潜意识没什么野心，只想好好享受当下。你是那种醒来会带着微笑的人，因为梦里的生活跟你想要的一模一样。",
+      traits: "梦境温馨写实，多为日常生活的美好延伸——散步、旅行、享受美食，独处时光居多，节奏舒缓而惬意。",
+      advice: "你已经很懂生活了，继续保持这份从容。",
+      partner: { code: "虚暗群控", name: "迷雾领航员", emoji: "⚓", reason: "你的安宁是TA的避风港，TA的冒险精神点燃你的好奇" },
+      color: { name: "晨光金", hex: "#FDCB6E" },
+      tags: ["岁月静好", "微笑醒来", "生活艺术家", "从容体质"]
+    },
+    "实明群控": {
+      name: "人间清醒王", emoji: "👑",
+      description: "你的梦简直是现实的4K加强版——场景真实、情绪积极，身边有一群人，而且你说了算。你在梦里开会比现实高效，社交比现实游刃有余，简直是理想中的自己。你的潜意识是个乐观的项目经理，觉得一切都在计划之中。这种自信不是盲目的，而是因为你确实很擅长掌控局面。",
+      traits: "梦境明亮且社交性强，常出现聚会、团建、合作场景，你在梦中是人群中的核心人物，气氛积极向上。",
+      advice: "别忘了，示弱也是一种力量。",
+      partner: { code: "虚暗独随", name: "深渊观星者", emoji: "🌑", reason: "你的自信补全TA的犹豫，TA的深度丰富你的视角" },
+      color: { name: "皇冠橙", hex: "#E17055" },
+      tags: ["人间清醒", "社交王者", "项目经理体质", "4K人生"]
+    },
+    "实明群随": {
+      name: "暖光聚落客", emoji: "🏡",
+      description: "你的梦像一个温暖的小镇——认识的人都在，大家一起过着简单快乐的日子。你不需要在梦里当英雄，光是和喜欢的人待在一起就够了。你的潜意识最看重的是连接和归属感，你的梦告诉你：人生最好的部分就是那些有人陪伴的普通时刻。",
+      traits: "梦境充满人情味，常出现家庭聚餐、朋友旅行、校园时光等场景，氛围温馨，你在其中随遇而安地享受陪伴。",
+      advice: "你给身边人的温暖比你想象的多，别吝啬表达。",
+      partner: { code: "虚暗独控", name: "暗夜驯猎者", emoji: "🦇", reason: "你的温暖是TA的港湾，TA的神秘激发你的好奇" },
+      color: { name: "暖光粉", hex: "#FAB1A0" },
+      tags: ["温暖小镇", "归属感满满", "陪伴至上", "人间温暖"]
+    },
+    "实暗独控": {
+      name: "午夜复盘师", emoji: "🔍",
+      description: "你的梦是大脑的深夜debug模式——场景真实但气氛压抑，你独自面对问题并试图解决。你可能经常梦到考试、deadline、被领导叫去谈话，而且你在梦里还真会去应对。你的潜意识是个焦虑但高效的打工人，连睡觉都在做复盘。好消息是，这说明你的问题解决能力连潜意识都认可。",
+      traits: "梦境写实且带有压力感，常出现工作考试场景，你在梦中独自应对挑战，虽然氛围紧张但始终保持行动力。",
+      advice: "睡前放下手机，你的大脑已经够努力了。",
+      partner: { code: "虚明群随", name: "泡泡宇宙旅客", emoji: "🫧", reason: "你的严谨遇上TA的浪漫，工作和生活终于平衡了" },
+      color: { name: "午夜蓝", hex: "#2D3436" },
+      tags: ["深夜debug", "焦虑卷王", "复盘体质", "问题终结者"]
+    },
+    "实暗独随": {
+      name: "旧巷拾忆人", emoji: "🚶",
+      description: "你的梦是一条走不完的老巷子——真实、安静、有点灰暗，脚步声只有你自己的。你常常梦到过去的事——小时候的教室、搬走的旧家、很久没联系的人。你的潜意识像一个恋旧的收藏家，在夜晚悄悄打开记忆的抽屉。这些梦有时让你感伤，但也在提醒你：那些经历塑造了现在的你。",
+      traits: "梦境多为过去场景的重现——旧居、校园、童年片段，独自一人在灰色调的记忆中穿行，情绪带有淡淡的怀旧和失落。",
+      advice: "回忆是礼物而非枷锁，向前走的路上可以偶尔回头看。",
+      partner: { code: "虚明群控", name: "幻境造梦师", emoji: "🎭", reason: "TA的热闹拉你走出回忆，你的故事给TA的创造添深度" },
+      color: { name: "旧时光青", hex: "#81ECEC" },
+      tags: ["记忆收藏家", "怀旧体质", "旧巷漫步", "时光穿行者"]
+    },
+    "实暗群控": {
+      name: "暴风指挥官", emoji: "⛈️",
+      description: "你的梦像一部灾难片——场景真实、气氛紧张，一群人面临危机，而你站出来指挥大局。你可能经常梦到紧急情况下带领别人撤退、做出艰难决定。你的潜意识有极强的危机意识和责任感，这让你在梦里活得很累，但也很酷。现实中你大概率也是那个\u201c出了事第一个顶上去\u201d的人。",
+      traits: "梦境紧张刺激，常出现突发危机和团队协作场景，你在压力下做出关键决策，氛围暗沉但充满戏剧张力。",
+      advice: "英雄也需要被拯救的时刻，允许自己脆弱。",
+      partner: { code: "虚明独随", name: "云端拾光者", emoji: "☁️", reason: "你的刚毅需要TA的柔和，TA的随性缓解你的紧绷" },
+      color: { name: "暴风红", hex: "#D63031" },
+      tags: ["危机指挥官", "灾难片主角", "责任感MAX", "压力下闪光"]
+    },
+    "实暗群随": {
+      name: "末班车乘客", emoji: "🚃",
+      description: "你的梦像深夜的末班车——车上有人，窗外是黑夜，你不确定要去哪里但也没打算下车。你的梦境真实但沉重，身边有人却总隔着一层距离。你的潜意识在告诉你：你可能正在某段关系或某个阶段中感到疲惫和迷茫。但别急，末班车也有终点站，而且窗外的夜色其实也挺美的。",
+      traits: "梦境灰暗写实，常出现赶路、等待、在人群中却感到孤独的场景，有种被生活推着走的无力感但不至于崩溃。",
+      advice: "累了就在下一站下车休息，不必一直赶路。",
+      partner: { code: "虚明独控", name: "星际漫游者", emoji: "🚀", reason: "TA的星光照亮你的夜路，你的真实让TA着陆" },
+      color: { name: "夜车灰", hex: "#636E72" },
+      tags: ["末班车体质", "疲惫旅人", "夜色美学", "终会到站"]
+    }
+  },
+  dimensions: {
+    xu_shi: { positive: "虚", negative: "实" },
+    ming_an: { positive: "明", negative: "暗" },
+    du_qun: { positive: "独", negative: "群" },
+    kong_sui: { positive: "控", negative: "随" }
+  }
+};
+
+// ===== STATE =====
+let currentQuestion = 0;
+let scores = { xu_shi: 0, ming_an: 0, du_qun: 0, kong_sui: 0 };
+let isTransitioning = false;
+
+// ===== INIT BACKGROUND =====
+function initStars() {
+  const container = document.getElementById('starsContainer');
+  // Create stars
+  for (let i = 0; i < 80; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    const size = Math.random() * 3 + 1;
+    star.style.cssText = `
+      width: ${size}px;
+      height: ${size}px;
+      left: ${Math.random() * 100}%;
+      top: ${Math.random() * 100}%;
+      --duration: ${Math.random() * 3 + 2}s;
+      --max-opacity: ${Math.random() * 0.6 + 0.2};
+      animation-delay: ${Math.random() * 3}s;
+    `;
+    container.appendChild(star);
+  }
+  // Create floating orbs
+  const orbColors = ['rgba(102,126,234,0.3)', 'rgba(118,75,162,0.3)', 'rgba(240,147,251,0.2)'];
+  for (let i = 0; i < 3; i++) {
+    const orb = document.createElement('div');
+    orb.className = 'orb';
+    const size = Math.random() * 200 + 100;
+    orb.style.cssText = `
+      width: ${size}px;
+      height: ${size}px;
+      background: ${orbColors[i]};
+      left: ${Math.random() * 80}%;
+      top: ${Math.random() * 80}%;
+      --duration: ${Math.random() * 8 + 6}s;
+      --tx: ${(Math.random() - 0.5) * 100}px;
+      --ty: ${(Math.random() - 0.5) * 100}px;
+      animation-delay: ${Math.random() * 4}s;
+    `;
+    container.appendChild(orb);
+  }
+}
+
+// ===== PAGE NAVIGATION =====
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+}
+
+// ===== QUIZ LOGIC =====
+function startQuiz() {
+  currentQuestion = 0;
+  scores = { xu_shi: 0, ming_an: 0, du_qun: 0, kong_sui: 0 };
+  showPage('page-quiz');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = quizData.questions[currentQuestion];
+  const total = quizData.questions.length;
+
+  document.getElementById('progressFill').style.width = `${((currentQuestion) / total) * 100}%`;
+  document.getElementById('progressText').textContent = `${currentQuestion + 1} / ${total}`;
+  document.getElementById('questionNumber').textContent = `QUESTION ${String(currentQuestion + 1).padStart(2, '0')}`;
+  document.getElementById('questionText').textContent = q.text;
+
+  const optionsList = document.getElementById('optionsList');
+  optionsList.innerHTML = '';
+
+  q.options.forEach((opt, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.textContent = opt.text;
+    btn.onclick = () => selectOption(idx);
+    optionsList.appendChild(btn);
+  });
+}
+
+function selectOption(idx) {
+  if (isTransitioning) return;
+  isTransitioning = true;
+
+  const q = quizData.questions[currentQuestion];
+  const optScores = q.options[idx].scores;
+
+  // Add scores
+  Object.keys(optScores).forEach(dim => {
+    scores[dim] += optScores[dim];
+  });
+
+  // Visual feedback
+  const buttons = document.querySelectorAll('.option-btn');
+  buttons[idx].classList.add('selected');
+
+  // Progress bar
+  const total = quizData.questions.length;
+  document.getElementById('progressFill').style.width = `${((currentQuestion + 1) / total) * 100}%`;
+
+  setTimeout(() => {
+    currentQuestion++;
+    if (currentQuestion >= quizData.questions.length) {
+      showLoading();
+    } else {
+      transitionToNextQuestion();
+    }
+  }, 400);
+}
+
+function transitionToNextQuestion() {
+  const card = document.getElementById('quizCard');
+  card.classList.add('fade-out');
+
+  setTimeout(() => {
+    card.classList.remove('fade-out');
+    card.classList.add('fade-in');
+    renderQuestion();
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        card.classList.add('show');
+        setTimeout(() => {
+          card.classList.remove('fade-in', 'show');
+          isTransitioning = false;
+        }, 400);
+      });
+    });
+  }, 300);
+}
+
+function showLoading() {
+  showPage('page-loading');
+  setTimeout(() => {
+    calculateResult();
+  }, 2500);
+}
+
+function calculateResult() {
+  const dims = quizData.dimensions;
+  let code = '';
+  Object.keys(dims).forEach(dim => {
+    code += scores[dim] > 0 ? dims[dim].positive : dims[dim].negative;
+  });
+
+  const result = quizData.results[code];
+  if (result) {
+    displayResult(code, result);
+  } else {
+    // Fallback: find first available result
+    const firstKey = Object.keys(quizData.results)[0];
+    displayResult(firstKey, quizData.results[firstKey]);
+  }
+}
+
+function displayResult(code, result) {
+  document.getElementById('resultEmoji').textContent = result.emoji;
+  document.getElementById('resultTypeCode').textContent = code;
+  document.getElementById('resultName').textContent = result.name;
+  document.getElementById('resultDesc').textContent = result.description;
+  document.getElementById('resultTraits').textContent = result.traits;
+  document.getElementById('resultAdvice').textContent = result.advice;
+
+  // Color
+  if (result.color) {
+    document.getElementById('resultColorBar').style.background = `linear-gradient(90deg, ${result.color.hex}, ${adjustColor(result.color.hex, 40)})`;
+    document.getElementById('resultColorName').textContent = result.color.name;
+  }
+
+  // Partner
+  if (result.partner) {
+    document.getElementById('partnerEmoji').textContent = result.partner.emoji;
+    document.getElementById('partnerName').textContent = result.partner.name;
+    document.getElementById('partnerDesc').textContent = result.partner.reason;
+  }
+
+  // Tags
+  const tagsContainer = document.getElementById('resultTagsContainer');
+  tagsContainer.innerHTML = '';
+  if (result.tags) {
+    result.tags.forEach(tag => {
+      const span = document.createElement('span');
+      span.className = 'result-tag';
+      span.textContent = tag;
+      tagsContainer.appendChild(span);
+    });
+  }
+
+  // Setup share card data
+  setupShareCard(code, result);
+
+  showPage('page-result');
+}
+
+function setupShareCard(code, result) {
+  document.getElementById('shareEmoji').textContent = result.emoji;
+  document.getElementById('shareName').textContent = result.name;
+  document.getElementById('shareCode').textContent = code;
+  document.getElementById('shareDesc').textContent = result.description;
+
+  const traitsContainer = document.getElementById('shareTraits');
+  traitsContainer.innerHTML = '';
+  if (result.tags) {
+    result.tags.forEach(tag => {
+      const span = document.createElement('span');
+      span.className = 'share-card-trait';
+      span.textContent = tag;
+      traitsContainer.appendChild(span);
+    });
+  }
+}
+
+// ===== SHARE =====
+function generateShareCard() {
+  const wrapper = document.getElementById('shareCardWrapper');
+  wrapper.style.position = 'fixed';
+  wrapper.style.top = '0';
+  wrapper.style.left = '0';
+
+  html2canvas(document.getElementById('shareCard'), {
+    backgroundColor: '#0a0a2e',
+    scale: 2,
+    useCORS: true,
+    logging: false
+  }).then(canvas => {
+    wrapper.style.position = 'fixed';
+    wrapper.style.top = '-9999px';
+    wrapper.style.left = '-9999px';
+
+    canvas.toBlob(blob => {
+      if (navigator.share && navigator.canShare && navigator.canShare({ files: [new File([blob], 'dream-result.png', { type: 'image/png' })] })) {
+        const file = new File([blob], 'dream-result.png', { type: 'image/png' });
+        navigator.share({ files: [file], title: '梦境人格测试结果' }).catch(() => {
+          downloadImage(canvas);
+        });
+      } else {
+        downloadImage(canvas);
+      }
+    }, 'image/png');
+  }).catch(() => {
+    wrapper.style.position = 'fixed';
+    wrapper.style.top = '-9999px';
+    wrapper.style.left = '-9999px';
+    showToast('生成失败，请重试');
+  });
+}
+
+function downloadImage(canvas) {
+  const link = document.createElement('a');
+  link.download = 'dream-personality.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+  showToast('卡片已保存 ✨');
+}
+
+function restartQuiz() {
+  currentQuestion = 0;
+  scores = { xu_shi: 0, ming_an: 0, du_qun: 0, kong_sui: 0 };
+  isTransitioning = false;
+  showPage('page-welcome');
+}
+
+// ===== UTILS =====
+function adjustColor(hex, amount) {
+  let r = parseInt(hex.slice(1, 3), 16);
+  let g = parseInt(hex.slice(3, 5), 16);
+  let b = parseInt(hex.slice(5, 7), 16);
+  r = Math.min(255, r + amount);
+  g = Math.min(255, g + amount);
+  b = Math.min(255, b + amount);
+  return `#${r.toString(16).padStart(2,'0')}${g.toString(16).padStart(2,'0')}${b.toString(16).padStart(2,'0')}`;
+}
+
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded', () => {
+  initStars();
+});
+</script>
+</body>
+</html>
