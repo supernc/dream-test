@@ -3,142 +3,172 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>梦境人格测试 V2 - 你的梦境人格是？</title>
-<meta name="description" content="25道题 · 15个维度 · 25种梦境人格，探索你的梦境密码">
+<title>解码你的梦境灵魂</title>
+<meta name="description" content="20道题 · 5大维度 · 20种梦境人格，聆听潜意识写给你的信">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <style>
+:root{--bg:#FAF8F5;--text:#2D2D2D;--sub:#8B7E74;--gold:#C4A265;--brown:#D4A574;--gray-brown:#9B8A7A;--card:#FFFFFF;--border:#E8E0D8;--serif:'Noto Serif SC','Source Han Serif SC','STSong','SimSun',serif;--sans:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-html,body{width:100%;min-height:100vh;overflow-x:hidden;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hiragino Sans GB','Microsoft YaHei','Helvetica Neue',Helvetica,Arial,sans-serif;background:#0a0a2e;color:#e0e0ff;-webkit-font-smoothing:antialiased}
-.stars-container{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;overflow:hidden;pointer-events:none}
-.star{position:absolute;border-radius:50%;background:#fff;animation:twinkle var(--duration) ease-in-out infinite alternate;opacity:0}
-@keyframes twinkle{0%{opacity:.1;transform:scale(.8)}100%{opacity:var(--max-opacity);transform:scale(1.2)}}
-.orb{position:absolute;border-radius:50%;filter:blur(40px);animation:floatOrb var(--duration) ease-in-out infinite alternate;opacity:.15}
-@keyframes floatOrb{0%{transform:translate(0,0) scale(1)}100%{transform:translate(var(--tx),var(--ty)) scale(1.2)}}
-.page{position:fixed;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1;opacity:0;visibility:hidden;transition:opacity .6s ease,visibility .6s ease;padding:20px}
+html,body{width:100%;min-height:100vh;overflow-x:hidden;font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;line-height:1.6}
+body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0}
+.page{position:fixed;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1;opacity:0;visibility:hidden;transition:opacity .5s ease,visibility .5s ease;padding:20px}
 .page.active{opacity:1;visibility:visible}
-@keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
-.welcome-content{text-align:center;animation:fadeInUp 1s ease-out}
-.welcome-moon{font-size:80px;margin-bottom:24px;animation:floatIcon 3s ease-in-out infinite;filter:drop-shadow(0 0 30px rgba(240,147,251,.4))}
-@keyframes floatIcon{0%,100%{transform:translateY(0)}50%{transform:translateY(-15px)}}
-.welcome-title{font-size:clamp(28px,7vw,44px);font-weight:800;background:linear-gradient(135deg,#667eea,#f093fb,#764ba2);background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:gradientShift 4s ease infinite;margin-bottom:16px;line-height:1.3}
-@keyframes gradientShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
-.welcome-subtitle{font-size:clamp(14px,3.5vw,18px);color:rgba(224,224,255,.65);margin-bottom:12px;letter-spacing:2px}
-.welcome-stats{display:flex;gap:20px;justify-content:center;margin-bottom:36px;font-size:13px;color:rgba(224,224,255,.45)}
-.welcome-stats span{display:flex;align-items:center;gap:4px}
-.btn-start{display:inline-block;padding:16px 52px;font-size:18px;font-weight:600;color:#fff;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border:none;border-radius:50px;cursor:pointer;position:relative;overflow:hidden;transition:transform .3s ease,box-shadow .3s ease;letter-spacing:2px}
-.btn-start:hover{transform:translateY(-2px);box-shadow:0 10px 40px rgba(102,126,234,.4)}
+#page-result{overflow-y:auto;justify-content:flex-start;padding-top:32px;padding-bottom:60px}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes breathe{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}
+
+/* === WELCOME === */
+.welcome-content{text-align:center;animation:fadeIn .8s ease-out;max-width:420px}
+.welcome-icon{margin-bottom:28px}
+.welcome-icon svg{width:80px;height:80px;animation:breathe 4s ease-in-out infinite}
+.welcome-title{font-family:var(--serif);font-size:clamp(28px,7vw,40px);font-weight:900;color:var(--text);margin-bottom:12px;line-height:1.3;letter-spacing:2px}
+.welcome-subtitle{font-size:clamp(14px,3.5vw,16px);color:var(--sub);margin-bottom:28px;line-height:1.8}
+.welcome-dims{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:32px;font-family:var(--serif);font-size:13px;color:var(--gray-brown);letter-spacing:1px}
+.welcome-dims span::after{content:' · ';color:var(--border)}
+.welcome-dims span:last-child::after{content:''}
+.btn-start{display:inline-block;padding:16px 56px;font-size:17px;font-weight:600;color:#fff;background:var(--gold);border:none;border-radius:30px;cursor:pointer;transition:all .3s ease;letter-spacing:3px;font-family:var(--sans)}
+.btn-start:hover{background:#b8943e;transform:translateY(-2px);box-shadow:0 8px 24px rgba(196,162,101,.3)}
 .btn-start:active{transform:translateY(0)}
-.btn-start::after{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:linear-gradient(45deg,transparent,rgba(255,255,255,.1),transparent);transform:rotate(45deg);animation:shimmer 3s infinite}
-@keyframes shimmer{0%{transform:translateX(-100%) rotate(45deg)}100%{transform:translateX(100%) rotate(45deg)}}
-.welcome-hint{margin-top:24px;font-size:13px;color:rgba(224,224,255,.35)}
-/* Quiz */
-.quiz-header{width:100%;max-width:520px;margin-bottom:28px;display:flex;align-items:center;gap:12px}
-.btn-back{width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:rgba(224,224,255,.6);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s ease;flex-shrink:0}
-.btn-back:hover{background:rgba(255,255,255,.1);color:#fff}
+.welcome-hint{margin-top:24px;font-size:13px;color:var(--gray-brown);letter-spacing:1px}
+
+/* === QUIZ === */
+.quiz-header{width:100%;max-width:480px;margin-bottom:24px;display:flex;align-items:center;gap:12px}
+.btn-back{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--card);color:var(--sub);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s;flex-shrink:0}
+.btn-back:hover{border-color:var(--gold);color:var(--gold)}
 .btn-back:disabled{opacity:.3;cursor:not-allowed}
 .quiz-progress-wrap{flex:1}
-.progress-bar{width:100%;height:4px;background:rgba(255,255,255,.1);border-radius:2px;overflow:hidden;margin-bottom:8px}
-.progress-fill{height:100%;background:linear-gradient(90deg,#667eea,#f093fb);border-radius:2px;transition:width .5s ease;width:0%}
-.progress-text{text-align:center;font-size:13px;color:rgba(224,224,255,.5)}
-.quiz-card{width:100%;max-width:520px;background:rgba(255,255,255,.05);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:32px 24px;transition:opacity .4s ease,transform .4s ease}
-.quiz-card.fade-out{opacity:0;transform:translateX(-30px)}
-.quiz-card.fade-in{opacity:0;transform:translateX(30px)}
-.quiz-card.fade-in.show{opacity:1;transform:translateX(0)}
-.question-number{font-size:13px;color:#f093fb;text-transform:uppercase;letter-spacing:3px;margin-bottom:12px}
-.question-text{font-size:clamp(18px,4.5vw,22px);font-weight:600;line-height:1.5;margin-bottom:28px;color:#fff}
-.options-list{display:flex;flex-direction:column;gap:12px}
-.option-btn{width:100%;padding:16px 20px;font-size:15px;line-height:1.4;color:rgba(224,224,255,.9);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;cursor:pointer;text-align:left;transition:all .3s ease;position:relative;overflow:hidden}
-.option-btn:hover{background:rgba(102,126,234,.15);border-color:rgba(102,126,234,.4);transform:translateX(4px)}
+.progress-bar{width:100%;height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:8px}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--brown));border-radius:2px;transition:width .5s ease;width:0%}
+.progress-text{text-align:center;font-size:13px;color:var(--sub);font-family:var(--serif);letter-spacing:2px}
+.quiz-card{width:100%;max-width:480px;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:32px 24px;transition:opacity .4s ease}
+.quiz-card.fade-out{opacity:0}
+.quiz-card.fade-in{opacity:0}
+.quiz-card.fade-in.show{opacity:1}
+.question-number{font-size:13px;color:var(--gold);font-family:var(--serif);letter-spacing:3px;margin-bottom:12px}
+.question-text{font-size:clamp(17px,4.2vw,20px);font-weight:500;line-height:1.7;margin-bottom:24px;color:var(--text)}
+.options-list{display:flex;flex-direction:column;gap:10px}
+.option-btn{width:100%;padding:14px 18px;font-size:14px;line-height:1.5;color:var(--text);background:var(--card);border:1px solid var(--border);border-radius:10px;cursor:pointer;text-align:left;transition:all .25s ease;position:relative}
+.option-btn:hover{border-color:var(--gold);background:rgba(196,162,101,.04)}
 .option-btn:active{transform:scale(.98)}
-.option-btn.selected{background:linear-gradient(135deg,rgba(102,126,234,.3),rgba(118,75,162,.3));border-color:#667eea;color:#fff}
-.option-btn.selected::before{content:'✓';position:absolute;right:16px;top:50%;transform:translateY(-50%);color:#f093fb;font-weight:bold}
-/* Loading */
+.option-btn.selected{background:rgba(196,162,101,.08);border-color:var(--gold);color:var(--text)}
+.option-btn.selected::after{content:'✓';position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--gold);font-weight:bold;font-size:16px}
+
+/* === LOADING === */
 .loading-content{text-align:center}
-.loading-orb{width:120px;height:120px;margin:0 auto 32px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#f093fb,#667eea,#764ba2);animation:pulseOrb 2s ease-in-out infinite,rotateOrb 6s linear infinite;box-shadow:0 0 60px rgba(102,126,234,.4),0 0 120px rgba(240,147,251,.2)}
-@keyframes pulseOrb{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
-@keyframes rotateOrb{0%{filter:hue-rotate(0deg)}100%{filter:hue-rotate(360deg)}}
-.loading-text{font-size:18px;color:rgba(224,224,255,.8);min-height:28px;transition:opacity .4s ease}
+.loading-ring{width:60px;height:60px;margin:0 auto 28px;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin 1.5s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-size:16px;color:var(--sub);font-family:var(--serif);min-height:24px;transition:opacity .4s;letter-spacing:1px}
 .loading-text.fade{opacity:0}
-/* Result */
-#page-result{overflow-y:auto;justify-content:flex-start;padding-top:40px;padding-bottom:60px}
-.result-container{width:100%;max-width:520px;animation:fadeInUp .8s ease-out}
-.result-card{background:rgba(255,255,255,.06);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:36px 24px;text-align:center;margin-bottom:16px}
-.result-emoji{font-size:72px;margin-bottom:12px;animation:floatIcon 3s ease-in-out infinite}
-.result-type-code{display:inline-block;padding:4px 16px;font-size:14px;letter-spacing:4px;color:#f093fb;border:1px solid rgba(240,147,251,.3);border-radius:20px;margin-bottom:8px;font-weight:600}
-.result-name{font-size:clamp(26px,6vw,34px);font-weight:800;background:linear-gradient(135deg,#667eea,#f093fb);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px}
-.result-slogan{font-size:15px;color:rgba(224,224,255,.6);margin-bottom:20px;font-style:italic}
-/* Match ring */
-.match-ring-wrap{margin:0 auto 24px;position:relative;width:120px;height:120px}
-.match-ring-svg{transform:rotate(-90deg)}
-.match-ring-bg{fill:none;stroke:rgba(255,255,255,.08);stroke-width:8}
-.match-ring-fill{fill:none;stroke:url(#matchGrad);stroke-width:8;stroke-linecap:round;stroke-dasharray:339.292;stroke-dashoffset:339.292;transition:stroke-dashoffset 1.5s ease-out}
-.match-pct{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:28px;font-weight:800;color:#fff}
-.match-pct small{font-size:14px;font-weight:400;color:rgba(224,224,255,.5)}
-.match-label{font-size:13px;color:rgba(224,224,255,.45);margin-top:-8px;margin-bottom:20px}
+
+/* === RESULT === */
+.result-container{width:100%;max-width:480px;animation:fadeIn .8s ease-out}
+.result-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:36px 24px;text-align:center;margin-bottom:16px}
+.result-pre{font-size:13px;color:var(--sub);letter-spacing:2px;margin-bottom:8px;font-family:var(--serif)}
+.result-name{font-family:var(--serif);font-size:clamp(28px,7vw,36px);font-weight:900;color:var(--text);margin-bottom:12px;letter-spacing:4px}
+.result-quote{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--sub);line-height:1.8;margin-bottom:20px;padding:0 12px;position:relative}
+.result-quote::before,.result-quote::after{font-size:28px;color:var(--gold);font-style:normal;vertical-align:top;line-height:1}
+.result-quote::before{content:'\201C';margin-right:4px}
+.result-quote::after{content:'\201D';margin-left:4px}
+.result-traits{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:24px}
+.result-trait{padding:6px 16px;font-size:12px;background:rgba(196,162,101,.08);border:1px solid rgba(196,162,101,.2);border-radius:20px;color:var(--gold);letter-spacing:1px}
+.match-pct-wrap{margin-bottom:8px}
+.match-pct-num{font-family:var(--serif);font-size:36px;font-weight:900;color:var(--gold)}
+.match-pct-num small{font-size:16px;font-weight:400;color:var(--sub)}
+.match-label{font-size:12px;color:var(--sub);letter-spacing:2px}
+
+/* Radar */
+.radar-section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:16px;text-align:center}
+.radar-title{font-family:var(--serif);font-size:15px;color:var(--text);margin-bottom:16px;letter-spacing:2px}
+.radar-svg{max-width:280px;margin:0 auto}
+
 /* Sections */
-.result-section{text-align:left;margin-bottom:20px;background:rgba(255,255,255,.03);border-radius:16px;padding:20px}
-.result-section-title{font-size:14px;font-weight:600;color:#f093fb;margin-bottom:10px;display:flex;align-items:center;gap:8px}
-.result-section-content{font-size:14px;line-height:1.8;color:rgba(224,224,255,.7)}
-.result-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
-.tag-strength{display:inline-block;padding:5px 14px;font-size:12px;background:rgba(0,206,201,.15);border:1px solid rgba(0,206,201,.25);border-radius:20px;color:#00cec9}
-.tag-weakness{display:inline-block;padding:5px 14px;font-size:12px;background:rgba(253,121,168,.12);border:1px solid rgba(253,121,168,.2);border-radius:20px;color:#fd79a8}
-/* Dimension bars */
-.dim-group{margin-bottom:16px}
-.dim-group-title{font-size:13px;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:6px}
-.dim-row{display:flex;align-items:center;gap:10px;margin-bottom:6px}
-.dim-label{font-size:12px;color:rgba(224,224,255,.6);width:72px;text-align:right;flex-shrink:0}
-.dim-bar-wrap{flex:1;height:8px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden}
-.dim-bar{height:100%;border-radius:4px;transition:width 1s ease-out}
-.dim-level{font-size:11px;width:20px;font-weight:600;flex-shrink:0}
-/* Partner */
-.result-partner{display:flex;align-items:center;gap:12px;padding:14px 16px;background:rgba(255,255,255,.04);border-radius:12px;margin-top:8px}
-.result-partner-emoji{font-size:36px}
-.result-partner-info{flex:1}
-.result-partner-name{font-size:15px;font-weight:600;color:#fff}
-.result-partner-reason{font-size:12px;color:rgba(224,224,255,.5);margin-top:3px;line-height:1.5}
+.result-section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:16px;text-align:left}
+.result-section-title{font-family:var(--serif);font-size:14px;font-weight:600;color:var(--gold);margin-bottom:12px;letter-spacing:2px;display:flex;align-items:center;gap:8px}
+.result-section-content{font-size:14px;line-height:1.8;color:var(--text)}
+.result-section-content p{margin-bottom:12px}
+.result-section-content p:last-child{margin-bottom:0}
+
+/* Dimension items */
+.dim-item{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--border)}
+.dim-item:last-child{border-bottom:none}
+.dim-name{font-family:var(--serif);font-size:13px;color:var(--text);width:60px;flex-shrink:0;text-align:right;letter-spacing:1px}
+.dim-bar-wrap{flex:1;height:6px;background:rgba(196,162,101,.1);border-radius:3px;overflow:hidden}
+.dim-bar{height:100%;background:linear-gradient(90deg,var(--gold),var(--brown));border-radius:3px;transition:width 1s ease-out}
+.dim-desc{font-size:11px;color:var(--sub);width:120px;flex-shrink:0}
+
+/* Match cards */
+.match-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.match-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px 16px;text-align:center}
+.match-card-label{font-size:12px;color:var(--sub);margin-bottom:8px;letter-spacing:1px}
+.match-card-emoji{font-size:36px;display:block;margin-bottom:6px}
+.match-card-name{font-family:var(--serif);font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px}
+.match-card-reason{font-size:11px;color:var(--sub);line-height:1.6}
+
+/* Premium wall */
+.premium-overlay{position:relative}
+.premium-overlay.locked::after{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(to bottom,rgba(250,248,245,0) 0%,rgba(250,248,245,.95) 40%,rgba(250,248,245,1) 100%);border-radius:16px;z-index:2;pointer-events:none}
+.premium-btn-wrap{text-align:center;margin-bottom:16px;position:relative;z-index:3}
+.btn-premium{display:inline-block;padding:14px 36px;font-size:15px;font-weight:600;color:#fff;background:linear-gradient(135deg,var(--gold),var(--brown));border:none;border-radius:30px;cursor:pointer;letter-spacing:2px;transition:all .3s}
+.btn-premium:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(196,162,101,.3)}
+
 /* Actions */
-.result-actions{display:flex;gap:12px;margin-top:8px}
-.btn-share,.btn-restart{flex:1;padding:14px 20px;font-size:15px;font-weight:600;border:none;border-radius:14px;cursor:pointer;transition:all .3s ease;letter-spacing:1px}
-.btn-share{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff}
-.btn-share:hover{box-shadow:0 8px 30px rgba(102,126,234,.4);transform:translateY(-2px)}
-.btn-restart{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(224,224,255,.8)}
-.btn-restart:hover{background:rgba(255,255,255,.12);transform:translateY(-2px)}
-/* Share card */
+.result-actions{display:flex;gap:12px;margin-top:8px;margin-bottom:16px}
+.btn-share,.btn-restart{flex:1;padding:14px;font-size:14px;font-weight:600;border:none;border-radius:12px;cursor:pointer;transition:all .3s;letter-spacing:2px}
+.btn-share{background:var(--gold);color:#fff}
+.btn-share:hover{background:#b8943e;transform:translateY(-2px)}
+.btn-restart{background:var(--card);border:1px solid var(--border);color:var(--sub)}
+.btn-restart:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px)}
+.result-footer{text-align:center;font-size:11px;color:var(--gray-brown);padding:16px 0;letter-spacing:1px}
+
+/* Share card (offscreen) */
 .share-card-wrapper{position:fixed;top:-9999px;left:-9999px;z-index:-1}
-.share-card{width:375px;padding:40px 28px;color:#e0e0ff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif}
-.share-card-emoji{font-size:56px;display:block;margin-bottom:10px;text-align:center}
-.share-card-name{font-size:24px;font-weight:800;text-align:center;margin-bottom:4px}
-.share-card-code{font-size:13px;letter-spacing:4px;color:rgba(224,224,255,.5);text-align:center;margin-bottom:6px}
-.share-card-slogan{font-size:13px;color:rgba(224,224,255,.55);text-align:center;font-style:italic;margin-bottom:16px}
-.share-card-match{text-align:center;font-size:28px;font-weight:800;margin-bottom:16px}
-.share-card-match small{font-size:14px;font-weight:400;color:rgba(224,224,255,.5)}
-.share-card-traits{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:24px}
-.share-card-trait{padding:4px 14px;font-size:12px;background:rgba(102,126,234,.2);border-radius:20px;color:rgba(224,224,255,.8)}
-.share-card-divider{width:40px;height:2px;background:linear-gradient(90deg,#667eea,#f093fb);margin:0 auto 20px;border-radius:1px}
-.share-card-footer{text-align:center;padding-top:20px;border-top:1px solid rgba(255,255,255,.06)}
-.share-card-footer-title{font-size:14px;color:rgba(224,224,255,.6);margin-bottom:4px}
-.share-card-footer-sub{font-size:11px;color:rgba(224,224,255,.3)}
-.toast{position:fixed;bottom:40px;left:50%;transform:translateX(-50%) translateY(20px);padding:12px 24px;background:rgba(102,126,234,.9);backdrop-filter:blur(10px);color:#fff;font-size:14px;border-radius:12px;z-index:1000;opacity:0;transition:all .3s ease;pointer-events:none}
+.share-card{width:375px;padding:40px 28px;background:var(--bg);font-family:var(--sans);color:var(--text)}
+.share-card::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none}
+.sc-name{font-family:var(--serif);font-size:28px;font-weight:900;text-align:center;margin-bottom:4px;letter-spacing:4px}
+.sc-quote{font-family:var(--serif);font-style:italic;font-size:13px;color:var(--sub);text-align:center;margin-bottom:16px;line-height:1.7}
+.sc-radar{text-align:center;margin-bottom:16px}
+.sc-traits{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:16px}
+.sc-trait{padding:4px 12px;font-size:11px;background:rgba(196,162,101,.08);border:1px solid rgba(196,162,101,.2);border-radius:16px;color:var(--gold)}
+.sc-match{text-align:center;font-family:var(--serif);font-size:24px;font-weight:700;color:var(--gold);margin-bottom:20px}
+.sc-match small{font-size:13px;font-weight:400;color:var(--sub)}
+.sc-divider{width:40px;height:1px;background:var(--gold);margin:0 auto 16px}
+.sc-footer{text-align:center;font-size:12px;color:var(--sub);line-height:1.8}
+
+/* Toast */
+.toast{position:fixed;bottom:40px;left:50%;transform:translateX(-50%) translateY(20px);padding:12px 24px;background:var(--gold);color:#fff;font-size:14px;border-radius:10px;z-index:1000;opacity:0;transition:all .3s;pointer-events:none}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-@media(max-width:360px){.quiz-card{padding:24px 16px}.result-card{padding:28px 16px}.result-section{padding:16px}}
+
+/* Modal */
+.modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.4);z-index:100;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.show{display:flex}
+.modal-box{background:var(--card);border-radius:16px;padding:32px 24px;text-align:center;max-width:320px;width:100%}
+.modal-box h3{font-family:var(--serif);margin-bottom:12px;color:var(--text)}
+.modal-box p{font-size:14px;color:var(--sub);margin-bottom:20px;line-height:1.7}
+.modal-box button{padding:10px 32px;background:var(--gold);color:#fff;border:none;border-radius:20px;cursor:pointer;font-size:14px}
+
+@media(max-width:360px){.quiz-card{padding:24px 16px}.result-card{padding:28px 16px}.result-section{padding:18px}.match-cards{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<div class="stars-container" id="starsContainer"></div>
 
 <!-- Page 1: Welcome -->
 <div class="page active" id="page-welcome">
   <div class="welcome-content">
-    <div class="welcome-moon">🌙</div>
-    <h1 class="welcome-title">你的梦境人格是？</h1>
-    <p class="welcome-subtitle">25道题 · 15个维度 · 25种梦境人格</p>
-    <div class="welcome-stats">
-      <span>🧠 深度分析</span>
-      <span>📊 维度雷达</span>
-      <span>💫 匹配报告</span>
+    <div class="welcome-icon">
+      <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="40" cy="40" r="28" fill="none" stroke="#C4A265" stroke-width="1.5" opacity=".3"/>
+        <path d="M40 14C40 14 52 28 52 40C52 52 40 66 40 66C40 66 28 52 28 40C28 28 40 14 40 14Z" fill="none" stroke="#C4A265" stroke-width="1.5"/>
+        <circle cx="40" cy="40" r="6" fill="#C4A265" opacity=".2"/>
+        <circle cx="40" cy="40" r="3" fill="#C4A265" opacity=".5"/>
+        <path d="M20 40 Q30 35 40 40 Q50 45 60 40" stroke="#C4A265" stroke-width="1" opacity=".3" fill="none"/>
+      </svg>
     </div>
-    <button class="btn-start" onclick="startQuiz()">开始探索 ✦</button>
-    <p class="welcome-hint">测试约3分钟，请在安静时作答</p>
+    <h1 class="welcome-title">解码你的梦境灵魂</h1>
+    <p class="welcome-subtitle">每个人的梦，都是潜意识写给你的一封信</p>
+    <div class="welcome-dims"><span>潮汐感</span><span>灼烧感</span><span>折叠度</span><span>觉知力</span><span>通感力</span></div>
+    <button class="btn-start" onclick="startQuiz()">开始测试</button>
+    <p class="welcome-hint">约3分钟 · 20道题 · 20种梦境人格</p>
   </div>
 </div>
 
@@ -148,11 +178,11 @@ html,body{width:100%;min-height:100vh;overflow-x:hidden;font-family:-apple-syste
     <button class="btn-back" id="btnBack" onclick="goBack()" disabled>←</button>
     <div class="quiz-progress-wrap">
       <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-      <div class="progress-text" id="progressText">1 / 25</div>
+      <div class="progress-text" id="progressText">01 / 20</div>
     </div>
   </div>
   <div class="quiz-card" id="quizCard">
-    <div class="question-number" id="questionNumber">QUESTION 01</div>
+    <div class="question-number" id="questionNumber">01</div>
     <div class="question-text" id="questionText">Loading...</div>
     <div class="options-list" id="optionsList"></div>
   </div>
@@ -161,1174 +191,365 @@ html,body{width:100%;min-height:100vh;overflow-x:hidden;font-family:-apple-syste
 <!-- Page 3: Loading -->
 <div class="page" id="page-loading">
   <div class="loading-content">
-    <div class="loading-orb"></div>
-    <p class="loading-text" id="loadingText">正在扫描你的梦境数据库...</p>
+    <div class="loading-ring"></div>
+    <p class="loading-text" id="loadingText">正在聆听你的梦境...</p>
   </div>
 </div>
 
 <!-- Page 4: Result -->
 <div class="page" id="page-result">
   <div class="result-container">
+    <!-- Header card -->
     <div class="result-card">
-      <div class="result-emoji" id="resultEmoji">🌙</div>
-      <div class="result-type-code" id="resultTypeCode">-----</div>
-      <h2 class="result-name" id="resultName">加载中...</h2>
-      <div class="result-slogan" id="resultSlogan"></div>
-      <svg class="match-ring-svg" width="120" height="120" viewBox="0 0 120 120" style="display:block;margin:0 auto">
-        <defs><linearGradient id="matchGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#667eea"/><stop offset="100%" stop-color="#f093fb"/></linearGradient></defs>
-        <circle class="match-ring-bg" cx="60" cy="60" r="54"/>
-        <circle class="match-ring-fill" id="matchRing" cx="60" cy="60" r="54"/>
-      </svg>
-      <div class="match-pct" id="matchPct" style="position:relative;text-align:center;margin-top:-80px;margin-bottom:20px"><span id="matchNum">0</span><small>%</small></div>
-      <div class="match-label">匹配度</div>
+      <div class="result-pre">你的梦境灵魂是——</div>
+      <h2 class="result-name" id="resultName">醒梦者</h2>
+      <div class="result-quote" id="resultQuote">你不是在做梦。你是在梦里，做一个清醒的人。</div>
+      <div class="result-traits" id="resultTraits"></div>
+      <div class="match-pct-wrap">
+        <div class="match-pct-num"><span id="matchNum">0</span><small>% 匹配</small></div>
+      </div>
+      <div class="match-label">梦境灵魂契合度</div>
     </div>
 
-    <div class="result-section">
-      <div class="result-section-title">📖 人格描述</div>
-      <div class="result-section-content" id="resultDesc"></div>
-    </div>
+    <!-- Radar (premium) -->
+    <div class="premium-overlay" id="premiumBlock">
+      <div class="radar-section" id="radarSection">
+        <div class="radar-title">梦境灵魂图谱</div>
+        <div class="radar-svg" id="radarChart"></div>
+      </div>
 
-    <div class="result-section">
-      <div class="result-section-title">🌌 梦境特征</div>
-      <div class="result-section-content" id="resultTraits"></div>
-    </div>
+      <!-- Dimension readings -->
+      <div class="result-section" id="dimSection">
+        <div class="result-section-title">维度解读</div>
+        <div id="dimReadings"></div>
+      </div>
 
-    <div class="result-section">
-      <div class="result-section-title">✨ 优势 & 弱点</div>
-      <div class="result-tags" id="resultStrengths"></div>
-      <div class="result-tags" id="resultWeaknesses" style="margin-top:8px"></div>
-    </div>
+      <!-- Description -->
+      <div class="result-section">
+        <div class="result-section-title">深度分析</div>
+        <div class="result-section-content" id="resultDesc"></div>
+      </div>
 
-    <div class="result-section">
-      <div class="result-section-title">💡 觉醒建议</div>
-      <div class="result-section-content" id="resultAdvice"></div>
-    </div>
+      <!-- Dream features -->
+      <div class="result-section">
+        <div class="result-section-title">梦境特征</div>
+        <div class="result-section-content" id="resultDream"></div>
+      </div>
 
-    <div class="result-section">
-      <div class="result-section-title">📊 维度分析</div>
-      <div id="dimensionChart"></div>
-    </div>
-
-    <div class="result-section">
-      <div class="result-section-title">🤝 最佳梦境搭档</div>
-      <div class="result-partner" id="resultPartner">
-        <div class="result-partner-emoji" id="partnerEmoji">🌙</div>
-        <div class="result-partner-info">
-          <div class="result-partner-name" id="partnerName">---</div>
-          <div class="result-partner-reason" id="partnerReason">---</div>
+      <!-- Match cards -->
+      <div class="match-cards" id="matchCards">
+        <div class="match-card">
+          <div class="match-card-label">💕 灵魂契合</div>
+          <div class="match-card-emoji" id="soulMatchEmoji">🌙</div>
+          <div class="match-card-name" id="soulMatchName">---</div>
+          <div class="match-card-reason" id="soulMatchReason">---</div>
         </div>
+        <div class="match-card">
+          <div class="match-card-label">⚡ 宿命相克</div>
+          <div class="match-card-emoji" id="nemesisEmoji">🌙</div>
+          <div class="match-card-name" id="nemesisName">---</div>
+          <div class="match-card-reason" id="nemesisReason">---</div>
+        </div>
+      </div>
+
+      <!-- Advice -->
+      <div class="result-section">
+        <div class="result-section-title">觉醒建议</div>
+        <div class="result-section-content" id="resultAdvice"></div>
       </div>
     </div>
 
-    <div class="result-actions">
-      <button class="btn-share" onclick="generateShareCard()">📸 生成分享卡片</button>
-      <button class="btn-restart" onclick="restartQuiz()">🔄 重新测试</button>
+    <!-- Premium button (hidden by default, shown when locked) -->
+    <div class="premium-btn-wrap" id="premiumBtnWrap" style="display:none">
+      <button class="btn-premium" onclick="showPremiumModal()">🔒 解锁完整分析 ¥1.99</button>
     </div>
+
+    <!-- Actions -->
+    <div class="result-actions">
+      <button class="btn-share" onclick="generateShareCard()">生成分享卡片</button>
+      <button class="btn-restart" onclick="restartQuiz()">重新测试</button>
+    </div>
+    <div class="result-footer">© 梦境灵魂测试 · 仅供娱乐参考</div>
   </div>
 </div>
 
-<!-- Share Card -->
+<!-- Share Card (offscreen for html2canvas) -->
 <div class="share-card-wrapper" id="shareCardWrapper">
-  <div class="share-card" id="shareCard">
-    <span class="share-card-emoji" id="shareEmoji">🌙</span>
-    <div class="share-card-name" id="shareName">---</div>
-    <div class="share-card-code" id="shareCode">-----</div>
-    <div class="share-card-slogan" id="shareSlogan"></div>
-    <div class="share-card-match" id="shareMatch"><span>0</span><small>% 匹配</small></div>
-    <div class="share-card-traits" id="shareTraits"></div>
-    <div class="share-card-divider"></div>
-    <div class="share-card-footer">
-      <div class="share-card-footer-title">🌙 梦境人格测试 | 测测你的梦境人格</div>
-      <div class="share-card-footer-sub">25道题 · 15个维度 · 25种梦境人格</div>
-    </div>
+  <div class="share-card" id="shareCard" style="position:relative;overflow:hidden">
+    <div class="sc-name" id="scName">醒梦者</div>
+    <div class="sc-quote" id="scQuote"></div>
+    <div class="sc-radar" id="scRadar"></div>
+    <div class="sc-traits" id="scTraits"></div>
+    <div class="sc-match" id="scMatch"><span>0</span><small>% 匹配</small></div>
+    <div class="sc-divider"></div>
+    <div class="sc-footer">🌙 解码你的梦境灵魂 | 测测你是哪种梦境人格</div>
+  </div>
+</div>
+
+<!-- Premium Modal -->
+<div class="modal-overlay" id="premiumModal">
+  <div class="modal-box">
+    <h3>即将开放</h3>
+    <p>完整深度分析功能正在开发中，敬请期待 ✨</p>
+    <button onclick="closePremiumModal()">我知道了</button>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// ===== PLACEHOLDER DATA (will be replaced by content-v2.json) =====
-let DATA = {
-  "meta": {
-    "title": "梦境人格测试",
-    "subtitle": "25道题，解锁你的梦境人格密码",
-    "version": "2.0",
-    "total_questions": 25,
-    "total_types": 25
-  },
-  "dimensions": [
-    {"id": "D1", "model": "梦境感知", "name": "梦境清晰度", "description": "梦境画面的清晰程度，从电影级高清到几乎记不住"},
-    {"id": "D2", "model": "梦境感知", "name": "梦境频率", "description": "做梦的频繁程度，从夜夜有梦到很少做梦"},
-    {"id": "D3", "model": "梦境感知", "name": "梦境记忆力", "description": "醒来后对梦境的记忆保留程度"},
-    {"id": "E1", "model": "梦境情绪", "name": "梦中情绪强度", "description": "梦里的情绪波动幅度，从大起大落到毫无波澜"},
-    {"id": "E2", "model": "梦境情绪", "name": "噩梦倾向", "description": "噩梦出现的频率和强度"},
-    {"id": "E3", "model": "梦境情绪", "name": "梦境情绪残留", "description": "醒来后梦中情绪对现实状态的影响持续时间"},
-    {"id": "W1", "model": "梦境世界", "name": "场景奇幻度", "description": "梦境场景的超现实程度，从魔幻世界到日常复刻"},
-    {"id": "W2", "model": "梦境世界", "name": "梦境叙事性", "description": "梦是否有完整的剧情线和故事结构"},
-    {"id": "W3", "model": "梦境世界", "name": "重复梦倾向", "description": "同一个梦境反复出现的频率"},
-    {"id": "S1", "model": "梦中自我", "name": "梦中控制力", "description": "在梦中能否意识到自己在做梦并控制走向"},
-    {"id": "S2", "model": "梦中自我", "name": "梦中角色感", "description": "自己在梦中是主角、旁观者还是模糊的存在"},
-    {"id": "S3", "model": "梦中自我", "name": "梦中社交度", "description": "梦里出现其他人的频率和互动程度"},
-    {"id": "I1", "model": "梦境洞察", "name": "梦境预感性", "description": "梦境内容与未来现实的吻合程度"},
-    {"id": "I2", "model": "梦境洞察", "name": "梦境启发性", "description": "梦境是否能带来创意灵感或问题解决思路"},
-    {"id": "I3", "model": "梦境洞察", "name": "梦境自省度", "description": "梦境内容与个人现实生活的映射程度"}
-  ],
-  "questions": [
-    {
-      "id": 1,
-      "text": "闭上眼回忆一下你最近的梦，画面是什么样的？",
-      "options": [
-        {"label": "A", "text": "4K超清，连路人的毛孔都看得见", "scores": {"D1": 2, "D3": 2}},
-        {"label": "B", "text": "像老式电视信号不好，画面时有时无", "scores": {"D1": 0, "D3": 0}},
-        {"label": "C", "text": "什么画面？我做梦吗？我失忆了吧", "scores": {"D1": -2, "D3": -2, "D2": -1}}
-      ]
-    },
-    {
-      "id": 2,
-      "text": "你做梦的频率大概是？",
-      "options": [
-        {"label": "A", "text": "几乎每天都有大型连续剧要追，躺下就开播", "scores": {"D2": 2, "D1": 1}},
-        {"label": "B", "text": "随机掉落，像游戏里的隐藏彩蛋", "scores": {"D2": 0}},
-        {"label": "C", "text": "一年能做两三个梦，还全是碎片", "scores": {"D2": -2, "D1": -1}}
-      ]
-    },
-    {
-      "id": 3,
-      "text": "早上醒来，你对昨晚的梦记得多少？",
-      "options": [
-        {"label": "A", "text": "简直能写小说了，对话台词我都记得", "scores": {"D3": 2, "D1": 1, "W2": 1}},
-        {"label": "B", "text": "记得个大概，但细节像被橡皮擦过", "scores": {"D3": 0}},
-        {"label": "C", "text": "刚才还记得来着……等等我要说什么来着？", "scores": {"D3": -2, "D1": -1}}
-      ]
-    },
-    {
-      "id": 4,
-      "text": "在梦里，你的情绪状态通常是？",
-      "options": [
-        {"label": "A", "text": "过山车本车，一会儿哭一会儿笑一会儿想报警", "scores": {"E1": 2, "E3": 1}},
-        {"label": "B", "text": "像在看别人的故事，有感觉但不强烈", "scores": {"E1": 0, "S2": -1}},
-        {"label": "C", "text": "AI都比我有感情，梦里我是个NPC", "scores": {"E1": -2, "S2": -1}}
-      ]
-    },
-    {
-      "id": 5,
-      "text": "说到噩梦，你跟它的关系是？",
-      "options": [
-        {"label": "A", "text": "老朋友了，三天不见就来找我喝茶", "scores": {"E2": 2, "E1": 1}},
-        {"label": "B", "text": "偶尔串个门，但不算太熟", "scores": {"E2": 0}},
-        {"label": "C", "text": "噩梦？不认识，我梦里只有阳光和彩虹🌈", "scores": {"E2": -2, "E1": -1}}
-      ]
-    },
-    {
-      "id": 6,
-      "text": "做了一个超离谱的梦之后，醒来你的状态是？",
-      "options": [
-        {"label": "A", "text": "半天缓不过来，上班了还在想梦里的剧情", "scores": {"E3": 2, "D3": 1}},
-        {"label": "B", "text": "洗个脸差不多就忘了", "scores": {"E3": 0}},
-        {"label": "C", "text": "秒切换，闹钟一响灵魂立刻回到工位", "scores": {"E3": -2, "D3": -1}}
-      ]
-    },
-    {
-      "id": 7,
-      "text": "你梦里最常出现的场景是？",
-      "options": [
-        {"label": "A", "text": "会飞的鲸鱼、水下城市、三个太阳……反正不是地球", "scores": {"W1": 2, "S1": 1}},
-        {"label": "B", "text": "像是现实的平行世界版，你家楼下多了条河之类的", "scores": {"W1": 0}},
-        {"label": "C", "text": "就是公司、学校、家……无聊到梦里都在加班", "scores": {"W1": -2, "I3": 1}}
-      ]
-    },
-    {
-      "id": 8,
-      "text": "你的梦通常有完整的故事线吗？",
-      "options": [
-        {"label": "A", "text": "有起承转合有高潮有结尾，诺兰看了都得鼓掌", "scores": {"W2": 2, "D1": 1}},
-        {"label": "B", "text": "有几个片段，但中间好像被人剪辑过", "scores": {"W2": 0}},
-        {"label": "C", "text": "纯意识流，前一秒在吃火锅下一秒在南极滑冰", "scores": {"W2": -2, "W1": 1}}
-      ]
-    },
-    {
-      "id": 9,
-      "text": "你有没有反复做同一个梦的经历？",
-      "options": [
-        {"label": "A", "text": "有！那个梦我都能背下来了，像卡在存档点", "scores": {"W3": 2, "I3": 1}},
-        {"label": "B", "text": "有几个场景偶尔重复出现，像彩蛋", "scores": {"W3": 0}},
-        {"label": "C", "text": "没有，我的梦从不回头看", "scores": {"W3": -2}}
-      ]
-    },
-    {
-      "id": 10,
-      "text": "在梦里，你能意识到自己在做梦吗？",
-      "options": [
-        {"label": "A", "text": "能！而且一旦意识到就开始为所欲为", "scores": {"S1": 2, "D1": 1}},
-        {"label": "B", "text": "偶尔会突然觉得不对劲，但想控制又控制不了", "scores": {"S1": 0}},
-        {"label": "C", "text": "从来不会，每次都信以为真还担心得要命", "scores": {"S1": -2, "E1": 1}}
-      ]
-    },
-    {
-      "id": 11,
-      "text": "在梦里，你通常扮演什么角色？",
-      "options": [
-        {"label": "A", "text": "绝对主角，镜头全程跟着我，BGM是为我响的", "scores": {"S2": 2, "S1": 1}},
-        {"label": "B", "text": "更像是在看电影，我在旁边吃瓜围观", "scores": {"S2": -1, "E1": -1}},
-        {"label": "C", "text": "我好像在梦里但又不确定自己是谁……像个bug", "scores": {"S2": -2, "D1": -1}}
-      ]
-    },
-    {
-      "id": 12,
-      "text": "你的梦里热闹吗？",
-      "options": [
-        {"label": "A", "text": "像过年一样，七大姑八大姨甚至明星都来了", "scores": {"S3": 2, "E1": 1}},
-        {"label": "B", "text": "有几个人，但都是熟人，像小型聚会", "scores": {"S3": 0}},
-        {"label": "C", "text": "永远只有我一个人，连NPC都不配", "scores": {"S3": -2, "W1": -1}}
-      ]
-    },
-    {
-      "id": 13,
-      "text": "你有没有觉得梦里发生的事后来真的发生了？",
-      "options": [
-        {"label": "A", "text": "经常！我怀疑自己有预知能力但不太稳定", "scores": {"I1": 2, "I3": 1}},
-        {"label": "B", "text": "有过一两次，应该是巧合吧……吧？", "scores": {"I1": 0}},
-        {"label": "C", "text": "从来没有，我的梦跟现实是两个平行宇宙", "scores": {"I1": -2, "W1": 1}}
-      ]
-    },
-    {
-      "id": 14,
-      "text": "做完一个印象深刻的梦之后，你会？",
-      "options": [
-        {"label": "A", "text": "记下来！梦里的点子说不定能用", "scores": {"I2": 2, "D3": 1}},
-        {"label": "B", "text": "跟朋友分享一下，当谈资用", "scores": {"I2": 0, "S3": 1}},
-        {"label": "C", "text": "翻个身继续睡，梦就是梦", "scores": {"I2": -2, "E3": -1}}
-      ]
-    },
-    {
-      "id": 15,
-      "text": "你觉得你的梦和你的现实生活有关系吗？",
-      "options": [
-        {"label": "A", "text": "简直就是现实的复盘和预演，我的潜意识在开会", "scores": {"I3": 2, "I1": 1}},
-        {"label": "B", "text": "有时候能看到现实的影子，但被魔改了", "scores": {"I3": 0, "W1": 1}},
-        {"label": "C", "text": "毫无关系，我梦里的世界比我的人生精彩100倍", "scores": {"I3": -2, "W1": 1}}
-      ]
-    },
-    {
-      "id": 16,
-      "text": "凌晨3点，你在梦里遇到一扇神秘的门，你会？",
-      "options": [
-        {"label": "A", "text": "踹门而入！这是我的梦，我说了算", "scores": {"S1": 2, "S2": 1, "W1": 1}},
-        {"label": "B", "text": "犹豫一下还是推开了，边走边慌", "scores": {"S1": 0, "E1": 1}},
-        {"label": "C", "text": "门自己开了，我被吸进去了，完全不由自主", "scores": {"S1": -2, "E2": 1}}
-      ]
-    },
-    {
-      "id": 17,
-      "text": "你梦里最离谱的体验是？",
-      "options": [
-        {"label": "A", "text": "在太空骑海豚，或者跟恐龙打麻将之类的", "scores": {"W1": 2, "W2": -1, "D1": 1}},
-        {"label": "B", "text": "回到了某个真实存在的地方，但细节全变了", "scores": {"W1": 0, "I3": 1, "W3": 1}},
-        {"label": "C", "text": "就是在正常生活，顶多迟到了一下", "scores": {"W1": -2, "I3": 1}}
-      ]
-    },
-    {
-      "id": 18,
-      "text": "梦里有个你认识的人，但TA表现得很奇怪，你的反应是？",
-      "options": [
-        {"label": "A", "text": "当面质问TA：你不对劲！然后发现这不是梦", "scores": {"S1": 1, "S2": 2, "E1": 1}},
-        {"label": "B", "text": "觉得怪怪的但也没多想，梦里嘛", "scores": {"S2": 0, "S1": -1}},
-        {"label": "C", "text": "我在梦里从来分不清谁是谁", "scores": {"S2": -2, "D1": -1, "S3": -1}}
-      ]
-    },
-    {
-      "id": 19,
-      "text": "你梦到自己在参加一场完全不知道考什么的考试，你会？",
-      "options": [
-        {"label": "A", "text": "慌到飞起，手心出汗，醒来还在紧张", "scores": {"E1": 2, "E3": 2, "E2": 1}},
-        {"label": "B", "text": "算了随便写吧，反正是梦（可能不知道是梦）", "scores": {"E1": 0, "S1": 0}},
-        {"label": "C", "text": "我没做过这种梦，我的梦不走焦虑路线", "scores": {"E2": -2, "E1": -1}}
-      ]
-    },
-    {
-      "id": 20,
-      "text": "如果你的梦能被别人围观，你觉得观众的评价会是？",
-      "options": [
-        {"label": "A", "text": "\u201c这剧本谁写的？比好莱坞还离谱但是好好看\u201d", "scores": {"W2": 2, "W1": 1, "D1": 1}},
-        {"label": "B", "text": "\u201c看不太懂但有被治愈到\u201d", "scores": {"W2": 0, "E1": 0, "I2": 1}},
-        {"label": "C", "text": "\u201c就这？还没我发呆想的东西有趣\u201d", "scores": {"W2": -2, "W1": -1, "D2": -1}}
-      ]
-    },
-    {
-      "id": 21,
-      "text": "你在梦里迷路了，你通常会？",
-      "options": [
-        {"label": "A", "text": "凭直觉走，而且经常莫名其妙就到了", "scores": {"S1": 1, "I1": 1, "W2": 1}},
-        {"label": "B", "text": "一直走一直走，场景不断变但永远走不出去", "scores": {"W3": 1, "E2": 1, "S1": -1}},
-        {"label": "C", "text": "我很少在梦里迷路，我的梦里没有路", "scores": {"W2": -1, "D1": -1}}
-      ]
-    },
-    {
-      "id": 22,
-      "text": "你的梦里经常出现过去的回忆吗？",
-      "options": [
-        {"label": "A", "text": "全是！小时候的教室、前任的脸、搬走的老家", "scores": {"I3": 2, "W3": 1, "E3": 1}},
-        {"label": "B", "text": "偶尔闪回，但通常跟现在的事混在一起", "scores": {"I3": 1, "W1": 0}},
-        {"label": "C", "text": "很少，我的梦不怀旧，都是没见过的东西", "scores": {"I3": -2, "W1": 2}}
-      ]
-    },
-    {
-      "id": 23,
-      "text": "半夜做了一个超级精彩的梦，但突然闹钟响了，你？",
-      "options": [
-        {"label": "A", "text": "闭上眼疯狂尝试续上剧情，有时候真能续上", "scores": {"S1": 1, "D3": 2, "D2": 1}},
-        {"label": "B", "text": "懊恼五秒钟，然后认命起床", "scores": {"E3": 1, "D3": 0}},
-        {"label": "C", "text": "什么梦？闹钟一响啥都忘了", "scores": {"D3": -2, "E3": -2}}
-      ]
-    },
-    {
-      "id": 24,
-      "text": "你觉得你的梦在试图告诉你什么吗？",
-      "options": [
-        {"label": "A", "text": "绝对在暗示我什么！我经常解梦分析", "scores": {"I1": 1, "I2": 1, "I3": 2}},
-        {"label": "B", "text": "可能吧，但我懒得深究", "scores": {"I2": 0, "I3": 0}},
-        {"label": "C", "text": "梦就是大脑在清内存，别想太多", "scores": {"I1": -2, "I2": -2, "I3": -1}}
-      ]
-    },
-    {
-      "id": 25,
-      "text": "最后一题：如果你能选择今晚的梦，你想要什么样的？",
-      "options": [
-        {"label": "A", "text": "一个我能完全控制的超级梦境，想干嘛干嘛", "scores": {"S1": 2, "W1": 1, "S2": 1}},
-        {"label": "B", "text": "一个温暖安静的梦，什么事都不用做", "scores": {"E1": -1, "E2": -2, "W1": -1}},
-        {"label": "C", "text": "无所谓，反正第二天也记不住", "scores": {"D2": -1, "D3": -1, "I2": -1}}
-      ]
-    }
-  ],
-  "types": [
-    {
-      "code": "LUCID",
-      "name": "清醒梦者",
-      "slogan": "别人在梦里被追，我在梦里开挂",
-      "emoji": "🎮",
-      "description": "你是梦境世界的超级管理员。当别人在噩梦里抱头鼠窜的时候，你已经学会了在梦里点开控制面板调参数。你的梦境清晰得像IMAX电影，而且你随时可以喊CUT。这种能力让你在潜意识层面有着罕见的自我觉知——你不是在做梦，你是在玩一个只有你知道秘籍的开放世界游戏。清醒梦者往往在现实中也是控制欲较强的人，你习惯掌控局面，讨厌失控的感觉。但别忘了，有时候放手让梦带你走，反而能看到意想不到的风景。",
-      "dream_feature": "经常在梦中意识到自己在做梦，能主动改变梦境走向。梦境画面极其清晰，可能会在梦里飞行、穿墙或召唤物品。偶尔会出现'梦中梦'的嵌套结构。",
-      "strengths": ["梦境操控力MAX", "潜意识觉知高", "心理韧性强"],
-      "weaknesses": ["控制欲溢出到现实", "不太擅长'顺其自然'"],
-      "advice": "试着在某些梦里放弃控制，让潜意识自由发挥。最好的灵感往往来自你没有预设的时刻。",
-      "match_code": "CHAOS",
-      "match_reason": "你的秩序遇上TA的混沌，梦境才完整",
-      "color": "#6C5CE7",
-      "gradient": ["#6C5CE7", "#A29BFE"],
-      "pattern": {"D1": "H", "D2": "H", "D3": "H", "E1": "M", "E2": "L", "E3": "M", "W1": "H", "W2": "H", "W3": "M", "S1": "H", "S2": "H", "S3": "M", "I1": "M", "I2": "H", "I3": "M"}
-    },
-    {
-      "code": "SIREN",
-      "name": "梦境海妖",
-      "slogan": "我的梦不是梦，是一场没打麻醉的心理手术",
-      "emoji": "🌊",
-      "description": "你的梦境是一片情感的深海，每次入睡都像跳进了马里亚纳海沟。别人做梦是看电影，你做梦是在坐过山车还没系安全带的那种。你在梦里哭得撕心裂肺，笑得前仰后合，醒来以后还要花半天消化这些情绪。这说明你是一个感受力极强的人，你的潜意识在用梦境处理那些白天你不敢面对的情感。海妖型的人现实中往往是共情能力很强的人，但也因此容易情绪疲劳。",
-      "dream_feature": "梦境充满强烈的情感体验，经常在梦中大哭、大笑或恐惧到醒来。梦境色彩浓郁，场景常与水、海洋有关。醒来后情绪需要较长时间平复。",
-      "strengths": ["共情力超群", "情感处理深度高", "艺术感知力强"],
-      "weaknesses": ["情绪容易被梦境绑架", "醒来后难以快速切换"],
-      "advice": "你的情感深度是天赋而非负担。试着在醒来后做5分钟冥想，给情绪一个缓冲区。",
-      "match_code": "OCEAN",
-      "match_reason": "TA的平静深海能承托你的情感风浪",
-      "color": "#0984E3",
-      "gradient": ["#0984E3", "#74B9FF"],
-      "pattern": {"D1": "H", "D2": "H", "D3": "H", "E1": "H", "E2": "M", "E3": "H", "W1": "M", "W2": "M", "W3": "M", "S1": "L", "S2": "M", "S3": "M", "I1": "M", "I2": "M", "I3": "H"}
-    },
-    {
-      "code": "LOOP",
-      "name": "循环者",
-      "slogan": "又是这个梦，我已经刷了第38遍了",
-      "emoji": "🔄",
-      "description": "你的潜意识像一台坏掉的播放器，反复播放同一首歌。那些重复出现的梦境不是bug，而是你内心深处某个未解决问题的紧急弹窗。循环者通常在现实中有某个一直回避却无法真正放下的心结——可能是一段关系、一个遗憾、一个未完成的决定。你的大脑在用最笨但最执着的方式提醒你：嘿，这个问题你还没处理呢。好消息是，当你终于在现实中面对那个心结时，循环梦往往就会自动停止。",
-      "dream_feature": "频繁出现同一个或几个相似的梦境主题，比如重复在同一个地方迷路、反复回到某个时间节点。梦境有强烈的既视感，像在循环播放一段录像。",
-      "strengths": ["问题意识强", "潜意识忠诚度高", "不轻易遗忘"],
-      "weaknesses": ["容易陷入心理死循环", "执念较重"],
-      "advice": "重复梦是潜意识在提醒你面对某个问题。试着醒来后写下梦境日记，分析循环的核心是什么。",
-      "match_code": "FLASH",
-      "match_reason": "你执着于重复，TA擅长碎片拼图，一起能看清全貌",
-      "color": "#E17055",
-      "gradient": ["#E17055", "#FAB1A0"],
-      "pattern": {"D1": "M", "D2": "H", "D3": "H", "E1": "M", "E2": "M", "E3": "H", "W1": "L", "W2": "M", "W3": "H", "S1": "L", "S2": "M", "S3": "M", "I1": "M", "I2": "L", "I3": "H"}
-    },
-    {
-      "code": "GHOST",
-      "name": "幽灵观众",
-      "slogan": "在自己的梦里吃自己的瓜，还挺好看的",
-      "emoji": "👻",
-      "description": "你在自己的梦里活成了一个透明的观众，飘在半空中看着剧情展开，却很少参与其中。这种旁观者视角其实很有意思——你的潜意识在告诉你，你习惯以一种超然的姿态审视生活，包括你自己的人生。幽灵观众型的人往往在现实中也倾向于先观察再行动，不轻易投入情感。你不是冷漠，而是需要先在安全距离内理解一切。但有时候，最精彩的梦境需要你亲自走进去。",
-      "dream_feature": "在梦中常以第三人称视角出现，像看电影一样观察梦境中的事件。很少与梦中角色互动，情感参与度低。梦境画面稳定但有一种'隔着玻璃'的感觉。",
-      "strengths": ["客观洞察力强", "情绪不易被裹挟", "善于抽离思考"],
-      "weaknesses": ["容易与自身情感脱节", "行动力偏低"],
-      "advice": "下次在梦里试着不做观众，走进你看到的那个场景。你可能会发现，参与比旁观有趣得多。",
-      "match_code": "DRAMA",
-      "match_reason": "TA写剧本你来当观众，完美的创作搭档",
-      "color": "#636E72",
-      "gradient": ["#636E72", "#B2BEC3"],
-      "pattern": {"D1": "M", "D2": "M", "D3": "M", "E1": "L", "E2": "L", "E3": "L", "W1": "M", "W2": "M", "W3": "L", "S1": "L", "S2": "L", "S3": "L", "I1": "L", "I2": "M", "I3": "M"}
-    },
-    {
-      "code": "PILOT",
-      "name": "梦境飞行员",
-      "slogan": "不好意思，我的梦自带飞行模式",
-      "emoji": "✈️",
-      "description": "你的梦境自带反重力系统。在别人还在梦里的地面上跑来跑去的时候，你已经解锁了飞行技能。梦境飞行员的梦境通常画面壮丽、自由度极高，你在梦中有很强的掌控感和自由感。这反映出你内心深处对自由和突破的强烈渴望——你不甘于被现实的框架束缚，你的灵魂始终在寻找更高的视角。飞行梦的人通常在创造力和想象力方面有天赋，只是现实中的'引力'有时候让你觉得束手束脚。",
-      "dream_feature": "经常在梦中飞翔或漂浮，视角开阔。梦境场景倾向于高空、广阔的自然景观。有时能在飞行中感受到风和速度，梦境自由度很高。",
-      "strengths": ["想象力无边界", "梦境自由度高", "内心追求突破"],
-      "weaknesses": ["现实落地感略弱", "梦太美不想醒"],
-      "advice": "飞行梦说明你的灵魂渴望自由。想想现实中有什么在束缚你，也许是时候做出改变了。",
-      "match_code": "MAZE",
-      "match_reason": "你在天上飞，TA在地上找路，互补的完美组合",
-      "color": "#00CEC9",
-      "gradient": ["#00CEC9", "#81ECEC"],
-      "pattern": {"D1": "H", "D2": "M", "D3": "M", "E1": "M", "E2": "L", "E3": "M", "W1": "H", "W2": "M", "W3": "L", "S1": "H", "S2": "H", "S3": "L", "I1": "L", "I2": "H", "I3": "L"}
-    },
-    {
-      "code": "ABYSS",
-      "name": "深渊潜行者",
-      "slogan": "噩梦看多了，我已经跟恐惧称兄道弟了",
-      "emoji": "🕳️",
-      "description": "别人避之不及的噩梦，是你的家常便饭。但你不是被动的受害者——你是那种在恐怖片里反手给鬼一巴掌的人。频繁的噩梦让你练就了在极端情境下保持冷静的能力，你的心理韧性是在一次次深渊历练中锻造出来的。深渊潜行者往往在现实中也是那种越挫越勇的人，你不怕黑暗，因为你知道每次穿越黑暗之后，看到的光更加珍贵。你的梦境是一个训练场，而你是从中走出来最强的战士。",
-      "dream_feature": "噩梦频率较高，但常在噩梦中展现出对抗或应对能力。梦境场景偏暗色系，可能涉及追逐、坠落、对抗。醒来后情绪强烈但恢复较快。",
-      "strengths": ["抗压能力极强", "逆境中成长", "不惧恐惧本身"],
-      "weaknesses": ["睡眠质量受影响", "可能压抑了现实焦虑"],
-      "advice": "噩梦是潜意识在帮你演习最坏的情况。但如果影响了睡眠，试着睡前做放松练习。",
-      "match_code": "FLOAT",
-      "match_reason": "TA的轻盈能中和你的沉重，让你的梦境喘口气",
-      "color": "#2D3436",
-      "gradient": ["#2D3436", "#636E72"],
-      "pattern": {"D1": "H", "D2": "H", "D3": "M", "E1": "H", "E2": "H", "E3": "M", "W1": "M", "W2": "M", "W3": "M", "S1": "M", "S2": "H", "S3": "M", "I1": "L", "I2": "L", "I3": "M"}
-    },
-    {
-      "code": "BLUR",
-      "name": "模糊人",
-      "slogan": "我确实做梦了，但内容……已读不回",
-      "emoji": "🌫️",
-      "description": "你的梦境像一张不断褪色的老照片。你知道自己做了梦，但具体内容？对不起，你的大脑拒绝提供回放服务。模糊人并不是不做梦，而是你的意识和潜意识之间有一道半透明的墙——信息在传输过程中被大量压缩了。这种类型的人通常在现实中也不太擅长处理模糊的情感信号，你更喜欢确定性的东西。你的大脑在说：醒来的世界已经够复杂了，梦就别记了吧。",
-      "dream_feature": "梦境画面模糊，像隔了一层毛玻璃。醒来后只记得'好像做了个梦'但想不起具体内容。偶尔会有某个画面闪过，但很快消失。",
-      "strengths": ["现实专注度高", "不被梦境情绪影响", "心理切换快"],
-      "weaknesses": ["错过潜意识的信号", "自我探索渠道少"],
-      "advice": "在床头放个笔记本，醒来第一秒就记录脑海中闪过的任何画面，坚持一周你会发现梦境开始变清晰。",
-      "match_code": "LUCID",
-      "match_reason": "TA的清醒能帮你找回丢失的梦境画面",
-      "color": "#DFE6E9",
-      "gradient": ["#DFE6E9", "#B2BEC3"],
-      "pattern": {"D1": "L", "D2": "M", "D3": "L", "E1": "L", "E2": "L", "E3": "L", "W1": "L", "W2": "L", "W3": "L", "S1": "L", "S2": "L", "S3": "M", "I1": "L", "I2": "L", "I3": "L"}
-    },
-    {
-      "code": "DRAMA",
-      "name": "梦境编剧",
-      "slogan": "我的潜意识有个剧本组，每天加班产出",
-      "emoji": "🎬",
-      "description": "你的梦不是梦，是一部部完整的电影。有铺垫、有发展、有高潮、有结局，偶尔还有彩蛋和续集。梦境编剧的大脑拥有惊人的叙事能力，即使在睡眠状态下也能构建出逻辑自洽的故事线。这反映出你天生就是一个故事型的人——你理解世界的方式是把一切编织成叙事。在现实中，你可能是那个讲话总能把人吸引住的人，因为你的大脑时刻在组织信息、构建叙事。你不只是在做梦，你在创作。",
-      "dream_feature": "梦境有清晰的故事线和完整的剧情结构。可能会出现章节式的梦境，或者连续几晚接着做同一个'连续剧'。梦中场景转换流畅，逻辑相对清晰。",
-      "strengths": ["叙事天赋", "逻辑构建力强", "创造力在线"],
-      "weaknesses": ["可能过度解读日常事件", "脑子停不下来"],
-      "advice": "你的梦境是天然的创意素材库。认真对待每个梦境故事，说不定里面藏着你的下一个好点子。",
-      "match_code": "GHOST",
-      "match_reason": "你写剧本TA当观众，互相成就的组合",
-      "color": "#E84393",
-      "gradient": ["#E84393", "#FD79A8"],
-      "pattern": {"D1": "H", "D2": "H", "D3": "H", "E1": "M", "E2": "M", "E3": "M", "W1": "H", "W2": "H", "W3": "M", "S1": "M", "S2": "H", "S3": "H", "I1": "L", "I2": "H", "I3": "M"}
-    },
-    {
-      "code": "DEJA",
-      "name": "既视者",
-      "slogan": "这个场景我梦过……等等，真的发生了？！",
-      "emoji": "👁️",
-      "description": "你的梦和现实之间有一条模糊的边界线，经常让你分不清某个场景是真实发生过还是曾经梦到过。既视者的潜意识像一个超前部署的情报系统，总在提前预演可能发生的事。这种体验让你对'巧合'这个词有了不一样的理解——对你来说，巧合太多就不是巧合了。你可能在现实中对直觉和第六感很敏感，做决定时会参考那种'说不清但就是觉得'的感觉。你的梦境是你独特的信息接收器。",
-      "dream_feature": "经常有'这个场景/对话我梦到过'的体验。梦境和现实存在微妙的重叠和呼应。梦中常出现具体的地点、人物或场景，醒后发现在现实中遇到了类似情境。",
-      "strengths": ["直觉力强", "预感性高", "潜意识信息整合力强"],
-      "weaknesses": ["容易混淆梦境与现实", "可能过度依赖直觉"],
-      "advice": "记录你的'应验'梦境，分析其中的规律。你的直觉是有价值的，但也要结合理性判断。",
-      "match_code": "PROPHET",
-      "match_reason": "你们俩碰一块，简直是预知梦双打组合",
-      "color": "#6C5CE7",
-      "gradient": ["#6C5CE7", "#A29BFE"],
-      "pattern": {"D1": "M", "D2": "M", "D3": "H", "E1": "M", "E2": "L", "E3": "M", "W1": "L", "W2": "M", "W3": "H", "S1": "M", "S2": "M", "S3": "M", "I1": "H", "I2": "M", "I3": "H"}
-    },
-    {
-      "code": "VOID",
-      "name": "虚空行者",
-      "slogan": "做梦？不存在的，我的睡眠纯净如蒸馏水",
-      "emoji": "🕳️",
-      "description": "当别人在讨论昨晚的梦有多离谱时，你只能沉默——因为你几乎不做梦。或者更准确地说，你醒来后完全不记得自己做过梦。虚空行者的大脑是一个高效的处理器，它选择在夜间进行纯粹的系统维护而不是放映电影。你不是缺乏想象力，而是你的潜意识选择了一种更安静的工作方式。在现实中，你可能是那种不太纠结、果断利落的人，过去的就让它过去。你的内心有一种禅意般的空旷。",
-      "dream_feature": "极少记得做过梦，醒来时大脑像刚被格式化一样清爽。偶尔有梦也是极其简短的画面闪过，缺乏完整内容。睡眠质量通常不错。",
-      "strengths": ["心理状态稳定", "不受梦境干扰", "睡眠质量好"],
-      "weaknesses": ["潜意识通道较窄", "可能忽视内心需求"],
-      "advice": "你的平静是一种力量，但偶尔也试着在睡前给大脑一个'命题'，看看潜意识会给你什么回应。",
-      "match_code": "SIREN",
-      "match_reason": "你的平静是TA情绪风暴中的避风港",
-      "color": "#2D3436",
-      "gradient": ["#2D3436", "#636E72"],
-      "pattern": {"D1": "L", "D2": "L", "D3": "L", "E1": "L", "E2": "L", "E3": "L", "W1": "L", "W2": "L", "W3": "L", "S1": "L", "S2": "L", "S3": "L", "I1": "L", "I2": "L", "I3": "L"}
-    },
-    {
-      "code": "FLASH",
-      "name": "闪回者",
-      "slogan": "我的梦是现实的抖音，全是15秒碎片",
-      "emoji": "⚡",
-      "description": "你的梦不是电影，是一部高速剪辑的短视频集锦。全是现实生活的碎片——白天看过的脸、走过的路、听过的话——被你的大脑随机拼贴成一幅拼图。闪回者的潜意识像一个不知疲倦的剪辑师，把一天的素材打散重组。这说明你是一个对细节很敏感的人，虽然你可能没意识到，但你的大脑一直在记录和处理周围的信息。你的梦境就是你的日常的一面碎镜子，映射出你注意到却没来得及消化的一切。",
-      "dream_feature": "梦境以现实碎片为主，经常出现白天见过的人、事、场景。画面跳跃、片段化，像在快速翻看手机相册。梦与现实界限模糊。",
-      "strengths": ["细节观察力强", "信息处理量大", "现实感知敏锐"],
-      "weaknesses": ["梦缺乏深度叙事", "可能反映信息过载"],
-      "advice": "你的大脑在用梦消化日常信息。如果梦太碎太乱，可能说明白天接收的信息需要减负了。",
-      "match_code": "LOOP",
-      "match_reason": "你拼碎片TA找循环，一起能解开潜意识的密码",
-      "color": "#FDCB6E",
-      "gradient": ["#FDCB6E", "#FFEAA7"],
-      "pattern": {"D1": "M", "D2": "H", "D3": "M", "E1": "L", "E2": "L", "E3": "L", "W1": "L", "W2": "L", "W3": "L", "S1": "L", "S2": "M", "S3": "M", "I1": "L", "I2": "L", "I3": "H"}
-    },
-    {
-      "code": "MAZE",
-      "name": "迷宫者",
-      "slogan": "我在梦里的步数比现实多10倍",
-      "emoji": "🌀",
-      "description": "你的梦里总有一个目的地，但你永远到不了。迷路、找东西、赶时间——你的梦境是一个永远在加载中的迷宫。迷宫者的潜意识在反复演练一个主题：寻找。你在现实中可能也常有这种感觉——觉得自己一直在往某个方向走，但总差那么一点。这不是焦虑的表现（好吧可能有一点），而是你的大脑在告诉你，你是一个有目标感的人。你只是还没找到那条最短路径。",
-      "dream_feature": "经常在梦中迷路、寻找某物或某人、在复杂建筑中穿梭。梦境场景多为走廊、街道、迷宫般的结构。有轻度焦虑感但不至于是噩梦。",
-      "strengths": ["目标驱动力强", "不轻易放弃", "空间想象力好"],
-      "weaknesses": ["容易焦虑", "过度追求确定性"],
-      "advice": "梦里的迷宫是现实中某个'找不到答案'的问题的投射。放松一点，有些路不用急着走通。",
-      "match_code": "PILOT",
-      "match_reason": "你在地上找路TA在天上导航，完美搭档",
-      "color": "#00B894",
-      "gradient": ["#00B894", "#55EFC4"],
-      "pattern": {"D1": "M", "D2": "H", "D3": "M", "E1": "M", "E2": "M", "E3": "M", "W1": "M", "W2": "M", "W3": "H", "S1": "L", "S2": "H", "S3": "L", "I1": "L", "I2": "L", "I3": "H"}
-    },
-    {
-      "code": "CROWD",
-      "name": "梦境社牛",
-      "slogan": "我的梦比我的微信群还热闹",
-      "emoji": "🎉",
-      "description": "你的梦从不缺群演。朋友、家人、同事、路人甚至名人都能在你的梦里客串一把，热闹程度堪比跨年晚会。梦境社牛的潜意识是一个超级社交达人，即使在睡眠中也在构建和维护社交网络。这反映出你是一个对人际关系高度敏感的人——你关注周围人的状态，在乎每一段关系的温度。你的梦就是你社交生活的彩排场和复盘区。但偶尔，你的梦也在提醒你：是时候跟自己独处一下了。",
-      "dream_feature": "梦中总是人来人往，经常出现大型社交场景如聚会、宴席、集会。梦里的人可能是现实中认识的，也可能是完全陌生的面孔。互动频繁、对话丰富。",
-      "strengths": ["社交敏感度高", "人际关系觉知强", "群体融入力好"],
-      "weaknesses": ["可能忽略个人内心需求", "梦境太喧嚣影响休息"],
-      "advice": "你的梦在帮你处理社交信息，但别忘了在梦里也给自己留一个安静的角落。",
-      "match_code": "ALONE",
-      "match_reason": "你的热闹刚好填补TA的孤独，TA的安静刚好给你喘息",
-      "color": "#E84393",
-      "gradient": ["#E84393", "#FD79A8"],
-      "pattern": {"D1": "M", "D2": "H", "D3": "M", "E1": "H", "E2": "L", "E3": "M", "W1": "M", "W2": "M", "W3": "L", "S1": "M", "S2": "H", "S3": "H", "I1": "L", "I2": "L", "I3": "H"}
-    },
-    {
-      "code": "ALONE",
-      "name": "孤梦者",
-      "slogan": "我的梦里只有我和一整个宇宙",
-      "emoji": "🌑",
-      "description": "你的梦境是一场盛大的独角戏。没有群演，没有配角，甚至连路人甲都没有——整个梦境世界只有你一个人。这不是孤独，而是你的潜意识在进行最深度的自我对话。孤梦者的内心有一个完整的宇宙，不需要外人来填充。你在现实中可能是那种享受独处、不太依赖社交获得能量的人。你的梦境是你的私人修行场，在这里你直面最真实的自己。只是偶尔，你的潜意识也会想：要是梦里有个人说说话就好了。",
-      "dream_feature": "梦境中几乎没有其他人出现，场景往往空旷、安静。独自在广阔的空间中行走或停留是常见主题。梦境氛围偏静谧，有种孤独但不凄凉的感觉。",
-      "strengths": ["内省力强", "自我认知深度高", "独处能力优秀"],
-      "weaknesses": ["可能回避社交需求", "情感表达通道少"],
-      "advice": "独处是力量，但也别忘了在现实中向重要的人敞开心扉。你值得被看见。",
-      "match_code": "CROWD",
-      "match_reason": "TA的热闹能撬开你的孤岛，你的深度能让TA安静下来",
-      "color": "#2D3436",
-      "gradient": ["#2D3436", "#636E72"],
-      "pattern": {"D1": "M", "D2": "M", "D3": "M", "E1": "M", "E2": "L", "E3": "M", "W1": "M", "W2": "L", "W3": "M", "S1": "M", "S2": "H", "S3": "L", "I1": "L", "I2": "M", "I3": "H"}
-    },
-    {
-      "code": "OCEAN",
-      "name": "深海梦者",
-      "slogan": "我的梦很安静，安静到能听见潜意识的心跳",
-      "emoji": "🐋",
-      "description": "你的梦境是一片温柔的深海——安静、深邃、充满治愈的蓝色。没有惊天动地的剧情，没有大起大落的情绪，只有一种缓慢流动的、温暖的存在感。深海梦者的潜意识像一头蓝鲸，在最深的水域里平静地呼吸。你的梦是你的充电站，每次醒来都感觉被轻轻拥抱过。在现实中，你可能是那种给人安全感的人，你的情绪稳定得像定海神针，但在这份平静之下，是一个比大多数人都更丰富的内心世界。",
-      "dream_feature": "梦境氛围宁静、治愈，常出现蓝色、水、自然等元素。画面流动缓慢，像在水中漂浮。情绪平和，醒来后感觉被充了电。",
-      "strengths": ["情绪稳定器", "内心丰富", "自我修复力强"],
-      "weaknesses": ["可能压抑了强烈情感", "外界觉得你'什么都无所谓'"],
-      "advice": "你的平静是珍贵的天赋。但偶尔也允许自己的梦激烈一点，那些被压下去的情绪也需要出口。",
-      "match_code": "STORM",
-      "match_reason": "你是暴风雨后的平静海面，TA是你需要的那场风浪",
-      "color": "#0984E3",
-      "gradient": ["#0984E3", "#74B9FF"],
-      "pattern": {"D1": "M", "D2": "M", "D3": "M", "E1": "L", "E2": "L", "E3": "L", "W1": "M", "W2": "L", "W3": "L", "S1": "M", "S2": "M", "S3": "L", "I1": "L", "I2": "M", "I3": "M"}
-    },
-    {
-      "code": "STORM",
-      "name": "暴风梦者",
-      "slogan": "我的梦从不下毛毛雨，要下就是台风天",
-      "emoji": "⛈️",
-      "description": "你的梦境是一场永不停歇的风暴。不是追逐就是逃亡，不是拯救世界就是见证末日，你的潜意识只会以最大音量播放。暴风梦者的情绪振幅是所有类型中最大的，你的梦境像一部永远在高潮的动作片。这反映出你内心有着巨大的能量——你不是那种可以平平淡淡过一生的人，你需要刺激、挑战和戏剧性。你的大脑在用梦境消耗那些白天积累的、无处释放的强烈能量。",
-      "dream_feature": "梦境节奏快、事件密集，经常涉及追逐、灾难、战斗等高强度场景。情绪波动剧烈，画面色彩对比强烈。醒来后常常心跳加速。",
-      "strengths": ["能量充沛", "危机处理能力强", "不怕混乱"],
-      "weaknesses": ["睡眠可能不安稳", "白天容易精力过剩"],
-      "advice": "你的能量需要出口。白天多做运动或创造性活动，睡前给大脑一个降温的过程。",
-      "match_code": "OCEAN",
-      "match_reason": "TA的深海是你风暴过后最需要的安宁",
-      "color": "#D63031",
-      "gradient": ["#D63031", "#FF7675"],
-      "pattern": {"D1": "H", "D2": "H", "D3": "M", "E1": "H", "E2": "H", "E3": "H", "W1": "H", "W2": "H", "W3": "L", "S1": "M", "S2": "H", "S3": "H", "I1": "L", "I2": "L", "I3": "M"}
-    },
-    {
-      "code": "PROPHET",
-      "name": "预言者",
-      "slogan": "不是我神，是我的梦比天气预报还准",
-      "emoji": "🔮",
-      "description": "你做的梦好像自带预告片功能。梦里出现的场景、对话甚至细节，过几天竟然在现实中上演了。预言者的潜意识是一个超强的模式识别引擎，它在你睡眠时处理了大量你在清醒时忽略的信息碎片，然后拼出了一个'最可能的未来'。你不是真的能预知未来，而是你的大脑比你自己更早察觉到了趋势。这种直觉力在现实中是巨大的优势，让你总能提前感知到变化的风向。",
-      "dream_feature": "梦境中的场景、对话会在现实中'应验'。梦境内容偏写实，常涉及具体的人和事。有时会在梦中感受到一种'这很重要'的紧迫感。",
-      "strengths": ["直觉敏锐", "模式识别力强", "趋势感知力佳"],
-      "weaknesses": ["可能过度解读巧合", "容易自我暗示"],
-      "advice": "你的直觉是有价值的，但也要学会区分'真正的感知'和'希望成真'。保持理性的锚。",
-      "match_code": "DEJA",
-      "match_reason": "你预见未来TA重温过去，时间线的完美搭档",
-      "color": "#6C5CE7",
-      "gradient": ["#6C5CE7", "#A29BFE"],
-      "pattern": {"D1": "H", "D2": "M", "D3": "H", "E1": "M", "E2": "L", "E3": "M", "W1": "L", "W2": "H", "W3": "M", "S1": "M", "S2": "M", "S3": "M", "I1": "H", "I2": "H", "I3": "H"}
-    },
-    {
-      "code": "MUSE",
-      "name": "缪斯",
-      "slogan": "别人的灵感来自生活，我的灵感来自昨晚的梦",
-      "emoji": "🎨",
-      "description": "你的梦境是一座取之不尽的灵感矿藏。那些在梦里闪现的画面、旋律、故事、创意，醒来后竟然真的能用。缪斯型的潜意识是一个24小时运转的创意工作室，在你休息的时候还在帮你头脑风暴。贝多芬、萨尔瓦多·达利、保罗·麦卡特尼都声称从梦中获得过灵感——你和他们是同一类型的梦境创作者。你的大脑善于在无意识状态下打破常规思维，把看似无关的元素重新组合成全新的创意。",
-      "dream_feature": "梦境充满创造性元素，经常出现奇特的意象组合、音乐、色彩。醒来后常有'这个想法太妙了'的感受。梦境场景美感强，像一幅流动的抽象画。",
-      "strengths": ["创造力爆棚", "灵感永不枯竭", "跨领域联想力强"],
-      "weaknesses": ["梦里的点子醒来可能有落差", "容易活在自己的世界"],
-      "advice": "养成记录梦境的习惯，你的下一个好点子很可能在今晚的梦里等你。准备好笔和纸。",
-      "match_code": "MIRROR",
-      "match_reason": "TA的现实映射能帮你把梦里的灵感落地",
-      "color": "#FD79A8",
-      "gradient": ["#FD79A8", "#FDCB6E"],
-      "pattern": {"D1": "H", "D2": "H", "D3": "H", "E1": "M", "E2": "L", "E3": "M", "W1": "H", "W2": "M", "W3": "L", "S1": "M", "S2": "M", "S3": "M", "I1": "M", "I2": "H", "I3": "L"}
-    },
-    {
-      "code": "MIRROR",
-      "name": "镜像者",
-      "slogan": "我的梦就是我人生的实时监控回放",
-      "emoji": "🪞",
-      "description": "你的梦境是现实的一面镜子，忠实地映射着你醒着时的生活。白天在工作上受了委屈，晚上梦里就上演职场大戏；最近在纠结一个选择，梦里就给你模拟了各种可能的结局。镜像者的潜意识是一个超级忠诚的秘书，把你每天的经历打包整理，晚上给你做一份情绪报告。你是那种非常接地气的人，不太会做飞天遁地的奇幻梦，但你的梦却是最有参考价值的——因为它直接告诉你：嘿，你现在最在乎的是什么。",
-      "dream_feature": "梦境内容与现实生活高度重叠，经常梦到工作、家庭、社交中正在发生的事。场景偏写实，像是生活纪录片的夸张版本。",
-      "strengths": ["自我觉察力强", "问题诊断准确", "务实不逃避"],
-      "weaknesses": ["梦缺乏想象力", "可能过度焦虑现实"],
-      "advice": "你的梦是你内心的温度计。如果最近的梦总是在重演某个场景，说明该认真面对那个问题了。",
-      "match_code": "MUSE",
-      "match_reason": "TA的天马行空能给你过于写实的梦境加点色彩",
-      "color": "#00CEC9",
-      "gradient": ["#00CEC9", "#81ECEC"],
-      "pattern": {"D1": "M", "D2": "H", "D3": "M", "E1": "M", "E2": "M", "E3": "H", "W1": "L", "W2": "M", "W3": "H", "S1": "L", "S2": "H", "S3": "H", "I1": "M", "I2": "L", "I3": "H"}
-    },
-    {
-      "code": "CHAOS",
-      "name": "混沌者",
-      "slogan": "我的梦连AI都分析不了，因为完全没逻辑",
-      "emoji": "🌪️",
-      "description": "你的梦是全宇宙最离谱的蒙太奇。前一秒在教室考试，下一秒在火星烤串，再下一秒你变成了一只会说法语的企鹅。混沌者的潜意识像一个喝醉了的DJ，随机混搭所有素材，完全不顾逻辑和因果。但这恰恰说明你的大脑有极强的发散性思维——你的创造力不是来自有序的推理，而是来自看似荒谬的连接。那些最伟大的创新，往往就是把两个'怎么也不该在一起'的东西放在了一起。",
-      "dream_feature": "梦境完全没有逻辑，场景、人物、时间线随机跳转。可能上一秒是古代下一秒在外太空，画面和元素的组合极其荒诞。",
-      "strengths": ["发散思维王者", "不被常规束缚", "创造性极高"],
-      "weaknesses": ["做事可能缺乏条理", "思维太跳跃别人跟不上"],
-      "advice": "你的混沌是创造力的温床。但偶尔也试着在梦里找一条线索跟下去，你可能会发现混沌中藏着秩序。",
-      "match_code": "LUCID",
-      "match_reason": "TA的秩序感能帮你整理混沌，但不会压制你的创造力",
-      "color": "#E17055",
-      "gradient": ["#E17055", "#FAB1A0"],
-      "pattern": {"D1": "M", "D2": "H", "D3": "L", "E1": "M", "E2": "M", "E3": "L", "W1": "H", "W2": "L", "W3": "L", "S1": "L", "S2": "L", "S3": "M", "I1": "L", "I2": "M", "I3": "L"}
-    },
-    {
-      "code": "ALARM",
-      "name": "闹钟人",
-      "slogan": "每次梦到最精彩的地方，闹钟就是我的终极BOSS",
-      "emoji": "⏰",
-      "description": "你的梦境有一个致命的特点：永远在最关键的时刻被打断。眼看就要打开那扇神秘的门、马上就要揭晓答案、即将见到那个重要的人——然后闹钟响了。闹钟人的潜意识像一个喜欢挖坑不填的编剧，永远让你停在'下一集预告'的位置。这其实反映出你在现实中可能有'差一步到位'的焦虑——总觉得自己离目标很近但就是够不到。但换个角度想，你的大脑在用这种方式保持你的好奇心和驱动力。",
-      "dream_feature": "梦境经常在高潮部分被打断，场景戛然而止。可能有反复尝试但总差一点完成的情节。醒来后有强烈的'还没完呢'的不甘感。",
-      "strengths": ["好奇心驱动力强", "目标感明确", "耐受未知的能力好"],
-      "weaknesses": ["完成焦虑", "容易对结果患得患失"],
-      "advice": "与其纠结梦里没看到的结局，不如在现实中去主动创造那个结局。你比你以为的更接近答案。",
-      "match_code": "REWIND",
-      "match_reason": "你永远向前冲TA总往后看，一起正好活在当下",
-      "color": "#FDCB6E",
-      "gradient": ["#FDCB6E", "#FFEAA7"],
-      "pattern": {"D1": "H", "D2": "H", "D3": "M", "E1": "H", "E2": "M", "E3": "H", "W1": "M", "W2": "H", "W3": "M", "S1": "L", "S2": "H", "S3": "M", "I1": "M", "I2": "M", "I3": "M"}
-    },
-    {
-      "code": "REWIND",
-      "name": "倒带者",
-      "slogan": "我的梦自带时光机，常年出差去过去",
-      "emoji": "⏪",
-      "description": "你的梦境是一台时光机，而且只有一个目的地：过去。童年的教室、年少时的朋友、已经搬走的老家、那个再也回不去的夏天——你的潜意识像一个恋旧的收藏家，把所有重要的记忆碎片都保存在梦境的仓库里，隔三差五拿出来回味一遍。倒带者并不是活在过去的人，你只是比别人更珍惜来时的路。那些梦里反复出现的场景，是你人生中真正重要的锚点。它们塑造了现在的你。",
-      "dream_feature": "梦境中频繁出现过去的场景和人物，如童年住所、小学同学、已故亲人。场景还原度高但带有怀旧滤镜。醒来后常有恍如隔世的感觉。",
-      "strengths": ["记忆力好", "重感情", "有根的人"],
-      "weaknesses": ["可能有未解决的过去", "不太擅长向前看"],
-      "advice": "过去是你的根，但不是你的天花板。试着在梦里对过去的自己说一句'没关系'，然后转身往前走。",
-      "match_code": "ALARM",
-      "match_reason": "你回顾过去TA冲向未来，一起正好在当下相遇",
-      "color": "#A29BFE",
-      "gradient": ["#A29BFE", "#DFE6E9"],
-      "pattern": {"D1": "M", "D2": "H", "D3": "H", "E1": "M", "E2": "L", "E3": "H", "W1": "L", "W2": "M", "W3": "H", "S1": "L", "S2": "M", "S3": "M", "I1": "M", "I2": "L", "I3": "H"}
-    },
-    {
-      "code": "ACTOR",
-      "name": "演员",
-      "slogan": "一人千面，我在梦里的戏路比正片还宽",
-      "emoji": "🎭",
-      "description": "你在梦里从不只是'你自己'。今天你是古代将军，明天你是外星探险家，后天你变成了一只猫。演员型的梦境者有极强的角色切换能力，你的潜意识就像一个百变演员，在每个梦里都能毫无违和感地化身为完全不同的人（甚至不是人）。这反映出你在现实中也有很强的适应性和共情能力——你能轻松切换角色，理解不同立场的人。但有时候演得太多，可能会忘了问自己：卸了妆之后，真正的我是谁？",
-      "dream_feature": "在梦中扮演各种不同角色，性别、年龄、甚至物种都可能改变。每个梦中的'自我'都不一样。梦境视角多变，有时第一人称有时第三人称。",
-      "strengths": ["适应力超强", "共情能力高", "角色切换自如"],
-      "weaknesses": ["可能缺乏稳定的自我认同", "容易在角色中迷失"],
-      "advice": "丰富的角色体验是你的财富，但别忘了每天醒来先确认一下：我是谁，我想成为谁。",
-      "match_code": "ALONE",
-      "match_reason": "TA的笃定能帮你在千面之后找到那个真正的自己",
-      "color": "#00CEC9",
-      "gradient": ["#00CEC9", "#81ECEC"],
-      "pattern": {"D1": "H", "D2": "M", "D3": "M", "E1": "H", "E2": "M", "E3": "M", "W1": "H", "W2": "H", "W3": "L", "S1": "M", "S2": "L", "S3": "H", "I1": "L", "I2": "M", "I3": "L"}
-    },
-    {
-      "code": "FLOAT",
-      "name": "漂浮者",
-      "slogan": "我的梦很轻，轻到像没做过一样",
-      "emoji": "🎈",
-      "description": "你的梦境有一种独特的失重感。不是飞行，而是漂浮——像一片叶子落在水面上，像一朵云飘过天空。漂浮者的梦没有强烈的冲突和戏剧性，取而代之的是一种宁静的、略带迷幻的美感。你的潜意识像一个极简主义艺术家，用最少的元素创造出最空灵的体验。在现实中，你可能是那种不太喜欢卷入纷争的人，你追求一种轻松的、不被束缚的生活方式。你的灵魂是自由的，像你梦中的那片云。",
-      "dream_feature": "梦境有漂浮、失重的体感，场景往往空旷、明亮、柔和。色彩偏浅色系，氛围如同水彩画。情绪平和，有一种被包裹的安全感。",
-      "strengths": ["内心平和", "审美感强", "不被外界裹挟"],
-      "weaknesses": ["可能逃避现实冲突", "存在感有时偏弱"],
-      "advice": "你的轻盈是稀缺的品质。但偶尔让自己落地一下，脚踩大地的感觉也很好。",
-      "match_code": "ABYSS",
-      "match_reason": "你的轻盈能把TA从深渊中拉起来",
-      "color": "#FFEAA7",
-      "gradient": ["#FFEAA7", "#DFE6E9"],
-      "pattern": {"D1": "L", "D2": "M", "D3": "L", "E1": "L", "E2": "L", "E3": "L", "W1": "M", "W2": "L", "W3": "L", "S1": "M", "S2": "M", "S3": "L", "I1": "L", "I2": "M", "I3": "L"}
-    },
-    {
-      "code": "AWAKE",
-      "name": "清醒者",
-      "slogan": "身体睡了，大脑：在的，有事您说",
-      "emoji": "💡",
-      "description": "你睡着了但你的意识好像从来没真正关机。清醒者处于一种介于睡眠和清醒之间的微妙状态——你做的梦思路清晰、逻辑完整，甚至能在梦里思考和做决定。有人在梦里飞、有人在梦里哭、而你在梦里开会。你的大脑是一台永不停机的服务器，即使在休眠模式下也在处理后台任务。这让你拥有极高的认知连续性，但代价是你可能永远觉得'没有真正休息过'。你的梦不太像梦，更像是白天思维的夜间延续。",
-      "dream_feature": "梦境逻辑清晰、思维活跃，可能在梦中解决问题或进行分析。梦和清醒时的思维方式几乎一样。偶尔会分不清自己是否已经醒来。",
-      "strengths": ["认知连续性强", "问题解决能力24小时在线", "思维敏捷"],
-      "weaknesses": ["大脑得不到真正休息", "可能过度思考"],
-      "advice": "你的大脑需要真正的休息时间。试试睡前冥想或白噪音，给你那台永不停机的大脑一个'关机'的信号。",
-      "match_code": "BLUR",
-      "match_reason": "TA的模糊能教你放松，你的清晰能帮TA找回梦境",
-      "color": "#FDCB6E",
-      "gradient": ["#FDCB6E", "#FFEAA7"],
-      "pattern": {"D1": "H", "D2": "H", "D3": "H", "E1": "L", "E2": "L", "E3": "L", "W1": "L", "W2": "H", "W3": "M", "S1": "H", "S2": "H", "S3": "M", "I1": "H", "I2": "H", "I3": "H"}
-    }
-  ],
-  "scoring": {
-    "method": "pattern_match",
-    "thresholds": {"H": 3, "L": -3},
-    "description": "每个维度对所有题目的得分求和。总分>3判定为H，总分<-3判定为L，介于-3到3之间判定为M。将用户的15维HML模式与25种人格的pattern进行对比，计算匹配维度数。相似度 = 匹配维度数 / 15 × 100%。取相似度最高的人格作为最终结果。如果存在并列最高，优先选择匹配H和L维度数量更多的结果（因为极端维度更能体现个性）。"
-  }
-};
+// ===== INLINED DATA from content-premium.json =====
+let DATA = {"meta":{"title":"解码你的梦境灵魂","subtitle":"每个人的梦，都是潜意识写给你的一封信","description":"20道题 · 5大维度 · 20种梦境人格","version":"3.0"},"dimensions":[{"id":"D1","model":"潮汐感","name":"梦境清晰度","description":"梦境画面的清晰与鲜明程度"},{"id":"D2","model":"潮汐感","name":"梦境频率","description":"做梦的频繁程度与规律性"},{"id":"D3","model":"潮汐感","name":"梦境记忆力","description":"醒来后对梦境内容的记忆保留程度"},{"id":"E1","model":"灼烧感","name":"梦中情绪强度","description":"梦里情绪波动的幅度与烈度"},{"id":"E2","model":"灼烧感","name":"噩梦倾向","description":"噩梦出现的频率与压迫感"},{"id":"E3","model":"灼烧感","name":"情绪残留","description":"梦中情绪渗透到清醒后的持续时间"},{"id":"W1","model":"折叠度","name":"场景奇幻度","description":"梦境世界偏离现实的扭曲程度"},{"id":"W2","model":"折叠度","name":"梦境叙事性","description":"梦中故事是否有完整的起承转合"},{"id":"W3","model":"折叠度","name":"重复梦倾向","description":"同一个梦境主题反复出现的频率"},{"id":"S1","model":"觉知力","name":"梦中控制力","description":"在梦中意识到做梦并主动控制的能力"},{"id":"S2","model":"觉知力","name":"梦中角色感","description":"在梦中作为主角的参与感与存在感"},{"id":"S3","model":"觉知力","name":"梦中社交度","description":"梦里出现他人的频率与互动深度"},{"id":"I1","model":"通感力","name":"梦境预感性","description":"梦境内容与未来现实的呼应程度"},{"id":"I2","model":"通感力","name":"梦境启发性","description":"梦境为现实带来灵感与顿悟的能力"},{"id":"I3","model":"通感力","name":"梦境自省度","description":"梦境内容与内心真实状态的映射深度"}],"dimension_groups":[{"name":"潮汐感","dims":["D1","D2","D3"],"color":"#C4A265"},{"name":"灼烧感","dims":["E1","E2","E3"],"color":"#D4A574"},{"name":"折叠度","dims":["W1","W2","W3"],"color":"#9B8A7A"},{"name":"觉知力","dims":["S1","S2","S3"],"color":"#8B7E74"},{"name":"通感力","dims":["I1","I2","I3"],"color":"#C4A265"}],"questions":[{"id":1,"text":"凌晨三点，你从一个梦中醒来。你记得最清楚的是——","options":[{"text":"梦里那个人的表情，清晰到能画出来","scores":{"D1":2,"D3":2,"E1":1}},{"text":"一种说不清的情绪，像雾气一样笼罩着你","scores":{"E1":1,"E3":2,"D1":-1}},{"text":"什么都记不住，只知道刚才好像在做梦","scores":{"D1":-2,"D3":-2,"D2":-1}}]},{"id":2,"text":"如果把你做梦的频率画成一条曲线，它更像——","options":[{"text":"一条持续的河流，几乎每晚都在流淌","scores":{"D2":2,"D1":1,"D3":1}},{"text":"间歇性的泉眼，时涌时歇，不可预测","scores":{"D2":0,"W1":1}},{"text":"一片干涸的河床，偶尔才有一场小雨","scores":{"D2":-2,"D1":-1}}]},{"id":3,"text":"醒来后，你试图回忆昨晚的梦。它在你脑海里停留的方式是——","options":[{"text":"像一本翻开的书，连对话都能复述","scores":{"D3":2,"D1":1,"W2":1}},{"text":"像一幅正在褪色的水彩，越回忆越模糊","scores":{"D3":0,"E3":1}},{"text":"像一扇已经关上的门，你知道里面有什么，但打不开了","scores":{"D3":-2,"D1":-1}}]},{"id":4,"text":"在梦里，你的心跳通常是什么节奏？","options":[{"text":"像坐在篝火旁——平静、温暖、不急不慢","scores":{"E1":-2,"E2":-1}},{"text":"像在暴风雨里跑步——猛烈、急促，醒来还在喘","scores":{"E1":2,"E3":1,"E2":1}},{"text":"像潮水一样——起伏不定，但你已经习惯了","scores":{"E1":1,"E3":1}}]},{"id":5,"text":"关于噩梦，最接近你的感受是——","options":[{"text":"它像一个偶尔来敲门的旧友，你已经不太害怕了","scores":{"E2":2,"E1":1,"S1":1}},{"text":"它很少来，但每次来都让你久久无法平静","scores":{"E2":0,"E3":2}},{"text":"你的梦几乎不走暗色调，噩梦对你来说很遥远","scores":{"E2":-2,"E1":-1}}]},{"id":6,"text":"做了一个很深的梦之后，你的白天会——","options":[{"text":"像穿了一件看不见的衣服，梦的情绪一整天都裹着你","scores":{"E3":2,"D3":1,"I3":1}},{"text":"洗把脸就好了，梦归梦，日子归日子","scores":{"E3":-1,"D3":-1}},{"text":"你会反复琢磨那个梦，像在解一道没有答案的题","scores":{"E3":1,"I3":2,"I2":1}}]},{"id":7,"text":"如果你的梦境是一个地方，它更像——","options":[{"text":"一座倒悬的城市，所有规则都被重写","scores":{"W1":2,"S1":1,"D1":1}},{"text":"你家楼下的街道，但总有一些微妙的不对劲","scores":{"W1":0,"I3":1}},{"text":"就是你熟悉的生活场景，真实到让你分不清梦与醒","scores":{"W1":-2,"I3":2}}]},{"id":8,"text":"回想你印象最深的梦，它的叙事方式更像——","options":[{"text":"一部有起承转合的电影，你甚至记得高潮在哪里","scores":{"W2":2,"D1":1,"D3":1}},{"text":"几张散落的照片，有画面但连不成故事","scores":{"W2":-1,"D1":0}},{"text":"一首没有歌词的曲子——没有情节，只有感觉","scores":{"W2":-2,"E1":1,"W1":1}}]},{"id":9,"text":"有一个场景或主题，在你的梦里反复出现过吗？","options":[{"text":"有，那个梦就像一封你读了很多遍却还没读懂的信","scores":{"W3":2,"I3":1,"E3":1}},{"text":"有几个似曾相识的元素，但每次出场方式都不同","scores":{"W3":1,"I1":1}},{"text":"没有，你的梦总是全新的，从不回头","scores":{"W3":-2,"W1":1}}]},{"id":10,"text":"在梦里，你有过「忽然意识到这是一个梦」的时刻吗？","options":[{"text":"有，而且一旦意识到，你可以改变梦的走向","scores":{"S1":2,"D1":1,"S2":1}},{"text":"偶尔会闪过这个念头，但梦境很快又把你吞没","scores":{"S1":0,"E1":1}},{"text":"从来没有，你在梦里全然相信那就是真实的世界","scores":{"S1":-2,"E1":1,"E2":1}}]},{"id":11,"text":"在梦的故事里，你更像——","options":[{"text":"执笔者，所有情节都围绕着你展开","scores":{"S2":2,"S1":1}},{"text":"一个坐在黑暗影院里的观众，看着别人的故事","scores":{"S2":-1,"E1":-1,"S1":-1}},{"text":"一个透明的影子——你在那里，但不确定自己是谁","scores":{"S2":-2,"D1":-1}}]},{"id":12,"text":"关于梦里的「其他人」，最真实的描述是——","options":[{"text":"你的梦像一场热闹的宴席，总是人来人往","scores":{"S3":2,"E1":1}},{"text":"偶尔有几个人出现，大多是你认识的面孔","scores":{"S3":0,"I3":1}},{"text":"你的梦几乎只有你一个人，安静得能听见自己的呼吸","scores":{"S3":-2,"W1":-1}}]},{"id":13,"text":"你有没有过这样的时刻——白天发生了一件事，你确信自己曾在梦里见过？","options":[{"text":"经常，多到你已经不再觉得惊讶了","scores":{"I1":2,"I3":1}},{"text":"有过一两次，那种感觉非常奇妙又让人不安","scores":{"I1":0,"E3":1}},{"text":"从来没有，你的梦和现实是两个不相交的世界","scores":{"I1":-2,"W1":1}}]},{"id":14,"text":"做完一个印象深刻的梦，你最可能做的事是——","options":[{"text":"记下来——梦里某个画面或念头让你觉得「可以用」","scores":{"I2":2,"D3":1}},{"text":"讲给某个人听，像分享一个只有你看过的秘密电影","scores":{"I2":0,"S3":1}},{"text":"翻个身继续睡，梦就像一阵风，吹过就算了","scores":{"I2":-2,"E3":-1,"D3":-1}}]},{"id":15,"text":"你觉得你的梦和你正在经历的生活之间——","options":[{"text":"像一面镜子，梦里总能看见白天不愿面对的东西","scores":{"I3":2,"I1":1,"E3":1}},{"text":"若即若离，偶尔重合，大部分时候各走各的","scores":{"I3":0,"W1":1}},{"text":"毫无关系——你的梦比你的生活有趣一百倍","scores":{"I3":-2,"W1":2}}]},{"id":16,"text":"深夜，你在梦中走进一条从未见过的走廊，尽头有一扇门。你——","options":[{"text":"推开它。你知道这是你的梦，门后是你自己的领地","scores":{"S1":2,"S2":1,"W1":1}},{"text":"站在门前犹豫很久，最终还是伸出了手","scores":{"S1":0,"E1":1,"E2":1}},{"text":"门自己打开了，你被一股力量轻轻推了进去","scores":{"S1":-1,"E2":1,"W2":1}}]},{"id":17,"text":"你梦中出现过最不可思议的画面是——","options":[{"text":"天空裂开了一道缝，或者海水是倒着流的","scores":{"W1":2,"D1":1,"I2":1}},{"text":"一个你认识的地方，但所有细节都被篡改了","scores":{"W1":0,"I3":1,"W3":1}},{"text":"没什么不可思议的，你的梦很平淡，就像换了个地方生活","scores":{"W1":-2,"I3":1}}]},{"id":18,"text":"梦里出现了一个你认识的人，但TA看起来和平时不一样。你——","options":[{"text":"直觉告诉你TA在隐藏什么，你选择直接问","scores":{"S2":2,"S1":1,"E1":1}},{"text":"觉得哪里不对但说不上来，就这样继续和TA相处了","scores":{"S2":0,"S1":-1}},{"text":"你在梦里认不出任何人，所有面孔都是模糊的","scores":{"S2":-2,"D1":-1,"S3":-1}}]},{"id":19,"text":"你梦到自己站在一个巨大的舞台上，聚光灯打在你身上，你——","options":[{"text":"心跳加速，那种紧张和兴奋在醒来后还久久不散","scores":{"E1":2,"E3":2,"S2":1}},{"text":"开始说话或表演，你在梦里比现实更从容","scores":{"S1":1,"S2":1,"E1":0}},{"text":"你很少梦到这种场景，你的梦更安静、更内向","scores":{"E1":-1,"S3":-1,"S2":-1}}]},{"id":20,"text":"如果你能给今晚的自己写一封信，关于你想做什么样的梦——","options":[{"text":"「带我去一个我能自己做主的世界」","scores":{"S1":2,"W1":1,"S2":1}},{"text":"「让我在一个安静的地方，什么都不用想」","scores":{"E1":-1,"E2":-2,"W1":-1}},{"text":"「你想告诉我什么就告诉我吧，我会听的」","scores":{"I1":1,"I2":1,"I3":1}}]}],"types":[{"code":"LUCID","name":"醒梦者","subtitle":"梦与醒的边界行走者","emoji":"🌓","quote":"你不是在做梦。你是在梦里，做一个清醒的人。","tags":["边界感知者","意识先行者","梦境建筑师"],"description":"你是那种在梦里也不肯闭眼的人。当所有人都沉入潜意识的深海时，你站在梦与醒的交界处，左手握着清醒，右手触碰着混沌。你的梦境清晰得像冬天的月光——每一处细节都经得起凝视。\n\n这种罕见的觉知让你拥有改写梦境剧本的能力，你不只是梦的旅客，你是梦的建筑师。但也正因如此，你很少体验到那种彻底交付自己的放松。你的意识像一盏永不熄灭的灯，即使在最深的夜里，也在悄悄亮着。\n\n如果说梦是潜意识写给自己的信，那你是唯一一个在信还没写完时就读到了的人。这份觉知是天赋，也是你需要学会安放的重量。","dream_feature":"常常在梦中突然意识到「这是梦」，并能主动改变梦的走向。梦境画面极其清晰，像一部高清电影。偶尔出现梦中梦的嵌套结构，你是少数能在其中保持自我的人。","strengths":["边界感知力","意识清晰度","心理韧性"],"weaknesses":["难以彻底放松","控制本能过强"],"advice":"试着在某个梦里松开手，让潜意识带你走一段未知的路。最好的风景往往在你放弃导航之后才出现。","soul_match":{"code":"DEEP","name":"静渊","emoji":"🌊","reason":"你的清醒需要一片深水来安放，TA的沉静能让你终于闭上眼"},"soul_clash":{"code":"VOID","name":"空白","emoji":"⬜","reason":"你在梦里建造世界，TA的梦里却空无一物，频率难以共振"},"color":"#7C6DAF","gradient":["#7C6DAF","#B8A9D9"],"pattern":{"D1":"H","D2":"H","D3":"H","E1":"M","E2":"L","E3":"M","W1":"H","W2":"H","W3":"M","S1":"H","S2":"H","S3":"M","I1":"M","I2":"H","I3":"M"}},{"code":"TIDE","name":"深潮","emoji":"🌊","quote":"你的梦不是梦。是潜意识涨潮时，冲上岸的那些来不及说出口的话。","tags":["情感共振者","深海感知者","情绪翻译官"],"description":"你的梦境是一片看不见底的海。每次闭上眼，你都沉入一种比现实更浓稠的情绪里——那里的喜悦更灿烈，悲伤更锋利，恐惧更真实。\n\n你是天生的情绪接收器。白天来不及处理的感受，都被潜意识小心翼翼地收进梦里，在夜晚慢慢展开。这让你拥有极深的共情力，但也意味着你的睡眠从来不是真正的休息。\n\n但请记住，能感受到深处的人，也能看见深处的光。你的敏感不是脆弱，是一种穿透表面的能力。","dream_feature":"梦境充满强烈的情感体验，常在梦中大哭或因恐惧而惊醒。画面色彩浓郁，场景常与水、风暴、深色空间有关。","strengths":["深度共情力","情感洞察力","艺术感知力"],"weaknesses":["情绪边界模糊","睡眠质量受影响"],"advice":"在床头放一杯水。醒来后先喝一口，告诉自己：梦里的潮水已经退了，现在是岸上的时间。","soul_match":{"code":"DEEP","name":"静渊","emoji":"🌊","reason":"TA的深水能接住你所有的潮汐，不会溢出也不会干涸"},"soul_clash":{"code":"MIST","name":"薄雾","emoji":"🌫️","reason":"你的情感浓烈如海，TA的梦却淡到转瞬即逝，你会觉得没有回响"},"color":"#456B8A","gradient":["#456B8A","#8BAEC4"],"pattern":{"D1":"H","D2":"H","D3":"H","E1":"H","E2":"M","E3":"H","W1":"M","W2":"M","W3":"M","S1":"L","S2":"M","S3":"M","I1":"M","I2":"M","I3":"H"}},{"code":"ECHO","name":"回声","emoji":"🔁","quote":"有些梦你做了一百遍，不是因为你忘了，是因为你还没听懂。","tags":["执念回溯者","记忆守门人","未解之结"],"description":"你的梦里住着一个不肯离开的客人。同一个场景、同一段路、同一扇门——它们反复出现，像一首被卡住的唱片。\n\n回声型的梦境不是bug，而是信号。你的潜意识在用最笨但最忠诚的方式提醒你：有一件事，你一直没有真正放下。\n\n当你终于听懂那封反复寄来的信，梦就会安静下来。在那之前，它会一直在那里等你。","dream_feature":"频繁出现相同或极其相似的梦境主题——同一条路、同一个房间、同一种被困住的感觉。有强烈的既视感。","strengths":["问题觉察力","执着深度","潜意识忠诚度"],"weaknesses":["容易困在过去","心理负担较重"],"advice":"试着在纸上写下那个反复出现的梦。写完之后对它说一句：我听到了。然后把纸折起来，放在抽屉深处。","soul_match":{"code":"BIRD","name":"飞鸟","emoji":"🕊️","reason":"TA的自由和轻盈能帮你从重复的迷宫里飞出来"},"soul_clash":{"code":"FLOAT","name":"漂流","emoji":"☁️","reason":"你在原地转圈，TA在天上飘荡，你们的梦始终擦肩而过"},"color":"#9B7E6B","gradient":["#9B7E6B","#C9B8A8"],"pattern":{"D1":"M","D2":"H","D3":"H","E1":"M","E2":"M","E3":"H","W1":"L","W2":"M","W3":"H","S1":"L","S2":"M","S3":"M","I1":"M","I2":"L","I3":"H"}},{"code":"GHOST","name":"幽灵","emoji":"👻","quote":"你在自己的梦里，活成了一个温柔的陌生人。","tags":["旁观者视角","超然感知者","梦的考古学家"],"description":"你的梦总在你面前展开，却从不邀请你走进去。你漂浮在故事上方，像一个透明的旁观者。\n\n这种旁观的姿态并非冷漠。你只是习惯了先理解再参与，先观察再投入。你的内心有一面单向玻璃：你能看见外面所有的风景，但很少让人看到里面的你。\n\n也许有一天你会走进那个梦境，亲手触摸那些你一直在远处凝望的东西。","dream_feature":"常以第三人称视角出现在梦中，像看电影一样观察事件发生。情感参与度低，画面稳定而清冷。","strengths":["客观洞察力","情绪抽离能力","深度观察力"],"weaknesses":["与自身情感脱节","参与感不足"],"advice":"下次在梦里看到那个站在远处的你，试着走过去牵住TA的手。你们本来就是一个人。","soul_match":{"code":"WEAVE","name":"编织者","emoji":"🧵","reason":"TA把梦写成故事，你来做最好的读者，这是最安静的默契"},"soul_clash":{"code":"BLAZE","name":"燃烧者","emoji":"🔥","reason":"TA的梦太烈太热，你习惯的距离感在那种温度下会融化"},"color":"#8E9AAF","gradient":["#8E9AAF","#CBD4E2"],"pattern":{"D1":"M","D2":"M","D3":"M","E1":"L","E2":"L","E3":"L","W1":"M","W2":"M","W3":"L","S1":"L","S2":"L","S3":"L","I1":"L","I2":"M","I3":"M"}},{"code":"BIRD","name":"飞鸟","emoji":"🕊️","quote":"你的梦从来不走地面。因为你的灵魂，天生属于更高的地方。","tags":["自由追逐者","天空住民","无界飞行家"],"description":"你的梦里没有地心引力。飞翔对你来说不是奇迹，而是一种本能——一种在清醒世界里被压抑的、对自由最本真的渴望。\n\n飞鸟型的人内心深处住着一个永远不肯降落的孩子。你的梦视角开阔、画面壮丽，每次醒来都像从另一个宇宙返航。\n\n但飞得再高，偶尔也需要一个落脚的枝头。不是因为你累了，而是有些风景，只有落地才能看见。","dream_feature":"经常在梦中飞翔或漂浮，视角开阔如鸟瞰。梦境场景多为广袤的天空、山巅、云海。","strengths":["想象力无边界","内心自由度高","视野开阔"],"weaknesses":["落地感偏弱","容易逃避束缚"],"advice":"飞行梦是灵魂在告诉你它需要呼吸的空间。问问自己：现实中，有什么正在让你窒息？","soul_match":{"code":"ECHO","name":"回声","emoji":"🔁","reason":"你的自由能帮TA从困住的旧梦里找到出口"},"soul_clash":{"code":"MAZE","name":"迷径","emoji":"🌀","reason":"你在天上飞，TA在地上找路，视角差让你们很难相遇"},"color":"#7DAFCB","gradient":["#7DAFCB","#C3DDE8"],"pattern":{"D1":"H","D2":"M","D3":"M","E1":"M","E2":"L","E3":"M","W1":"H","W2":"M","W3":"L","S1":"H","S2":"H","S3":"L","I1":"L","I2":"H","I3":"L"}},{"code":"DARK","name":"夜行者","emoji":"🌑","quote":"你不是不怕黑暗。你只是比任何人都清楚，光的入口长在黑暗的最深处。","tags":["暗面穿行者","恐惧驯服者","深夜行路人"],"description":"你的梦大多从暗色调开始。但你不是噩梦的受害者，你是穿越它的人。\n\n夜行者的梦境是一座炼炉。那些反复出现的暗面，不是在惩罚你，而是在锻造你。\n\n你知道一件别人不知道的事：黑暗的尽头不一定是光明，但穿越黑暗本身，就是光。","dream_feature":"噩梦频率较高，但常在梦中展现出对抗或穿越的勇气。场景偏暗色系。醒来后情绪强烈但恢复力极强。","strengths":["抗压韧性","逆境生长力","直面真相的勇气"],"weaknesses":["内心创伤需要被看见","容易忽略柔软的需求"],"advice":"你已经足够勇敢了。偶尔允许自己做一个温柔的梦吧——不是每个夜晚都需要战斗。","soul_match":{"code":"FLOAT","name":"漂流","emoji":"☁️","reason":"TA的轻盈像一缕月光，能照进你那些太过沉重的夜"},"soul_clash":{"code":"DEEP","name":"静渊","emoji":"🌊","reason":"你的暗面和TA的深邃叠在一起，可能会沉得太深"},"color":"#3D405B","gradient":["#3D405B","#81B29A"],"pattern":{"D1":"H","D2":"H","D3":"M","E1":"H","E2":"H","E3":"M","W1":"M","W2":"M","W3":"M","S1":"M","S2":"H","S3":"M","I1":"L","I2":"L","I3":"M"}},{"code":"MIST","name":"薄雾","emoji":"🌫️","quote":"你的梦从不逗留。像清晨的雾，太阳一出来就走了。","tags":["轻触者","瞬间旅客","雾中漫步者"],"description":"你知道自己做了梦。但关于它的一切都像指缝间的沙，越想抓住流失得越快。\n\n这不意味着你的内心是空白的。你的潜意识选择了一种更隐秘的表达方式——它在你几乎听不见的频率上轻声低语。\n\n薄雾终有凝结成露珠的时刻。也许某天早晨你会突然记住一个梦，那一定是你的潜意识觉得，是时候让你知道了。","dream_feature":"梦境画面模糊如隔着毛玻璃，醒来后只残留一种隐约的感觉。像一张被水浸过的照片，轮廓还在，细节已失。","strengths":["活在当下的能力","不被过去束缚","心理切换迅速"],"weaknesses":["容易错过潜意识的信号","自我探索通道偏窄"],"advice":"在枕头边放一支笔。醒来的第一秒，哪怕只写下一个词——那个词里藏着你的潜意识最想说的话。","soul_match":{"code":"LUCID","name":"醒梦者","emoji":"🌓","reason":"TA的清醒能帮你在雾散之前，看清那些差点错过的画面"},"soul_clash":{"code":"TIDE","name":"深潮","emoji":"🌊","reason":"TA的梦深到见底，你的梦淡到无痕，你们对梦的态度截然相反"},"color":"#D5C4B0","gradient":["#D5C4B0","#EDE4DA"],"pattern":{"D1":"L","D2":"M","D3":"L","E1":"L","E2":"L","E3":"L","W1":"L","W2":"L","W3":"L","S1":"L","S2":"L","S3":"M","I1":"L","I2":"L","I3":"L"}},{"code":"WEAVE","name":"编织者","emoji":"🧵","quote":"别人在梦里迷路，你在梦里写小说。","tags":["叙事架构师","故事编织者","潜意识导演"],"description":"你的梦不是梦，是一部部精心编排的作品。有开场、有伏笔、有高潮、有那个让你屏住呼吸的转折。\n\n编织者拥有一种罕见的能力：即使在无意识状态下，大脑也能构建出逻辑自洽的叙事。你是天生的故事型人格。\n\n你的梦境是你最私密的创意空间，那些在白天来不及讲完的故事，都在深夜的梦里悄悄续写着。","dream_feature":"梦境有清晰的故事线和完整的剧情架构。可能会出现连续几晚的「连续剧」式梦境。场景转换流畅，人物关系明确。","strengths":["叙事天赋","逻辑构建力","创造性表达"],"weaknesses":["容易过度解读日常","脑中故事永不停歇"],"advice":"你的梦里藏着你还没写出来的故事。买一本好看的本子，专门给它们一个家。","soul_match":{"code":"GHOST","name":"幽灵","emoji":"👻","reason":"你写出最好的故事，TA是最安静的读者，你们之间不需要多余的话"},"soul_clash":{"code":"VOID","name":"空白","emoji":"⬜","reason":"你的梦是满满的故事，TA的梦里空空如也，你会觉得少了一个对话者"},"color":"#A8577E","gradient":["#A8577E","#D4A0B9"],"pattern":{"D1":"H","D2":"H","D3":"H","E1":"M","E2":"M","E3":"M","W1":"H","W2":"H","W3":"M","S1":"M","S2":"H","S3":"H","I1":"L","I2":"H","I3":"M"}},{"code":"DEJA","name":"既视","emoji":"👁️","quote":"你的梦不是在回忆过去，也不是在预见未来。它只是比你早到了一步。","tags":["时间折叠者","直觉先知","似曾相识者"],"description":"你经常在某个瞬间停下来——这个街角、这句话、这个人的表情……你确信自己在梦里见过。\n\n既视型的梦境模糊了过去、现在和未来的边界。你的潜意识像一个极其敏感的雷达，在你睡着时扫描着你未曾注意到的信息碎片。\n\n你活在一种微妙的恍惚中——不确定此刻是第一次，还是又一次。","dream_feature":"常常在现实中遇到「这个我梦到过」的时刻。梦境内容偏写实，涉及具体的场景和人物。","strengths":["直觉力极强","预感敏锐","信息整合力"],"weaknesses":["容易混淆梦境与记忆","过度依赖直觉"],"advice":"准备一个小本子，每次梦到具体场景就记下来。不是为了验证预言，而是为了更了解你那个比你更聪明的潜意识。","soul_match":{"code":"ORACLE","name":"预言","emoji":"🔮","reason":"你们都能触碰到时间的褶皱，在一起时直觉会成倍放大"},"soul_clash":{"code":"SHARD","name":"碎镜","emoji":"🪞","reason":"你追寻完整的重现，TA的世界是破碎的拼图，你们的节奏很难同步"},"color":"#6B7B8D","gradient":["#6B7B8D","#A8B5C3"],"pattern":{"D1":"M","D2":"M","D3":"H","E1":"M","E2":"L","E3":"M","W1":"L","W2":"M","W3":"H","S1":"M","S2":"M","S3":"M","I1":"H","I2":"M","I3":"H"}},{"code":"VOID","name":"空白","emoji":"⬜","quote":"你的夜晚是干净的。不是空无一物，而是安静到连月光都不敢打扰。","tags":["沉默之人","虚空守望者","夜的极简主义者"],"description":"当别人争先恐后地分享昨晚的梦有多离谱时，你只是安静地微笑。你的夜晚真的是一片空白——干净、平整，像一张没有被写过的纸。\n\n但空白不是贫瘠。你的潜意识选择了一种更安静的工作方式。你的大脑像一片冬天的湖面，表面看不到任何波澜，但冰层之下，水从未停止流动。\n\n你的内心有一种近乎禅意的空旷——不是空，是留白。而留白，是所有画面中最奢侈的部分。","dream_feature":"极少记得做梦，醒来时大脑清爽如初。偶尔有梦也只是短暂的画面闪过，像水面上一圈很快消散的涟漪。","strengths":["内心稳定性","不被梦境干扰","果断利落"],"weaknesses":["潜意识沟通通道偏窄","可能忽略深层情感需求"],"advice":"睡前给自己一个小小的命题——比如「今晚让我看见一种颜色」。你的潜意识只是在等一个邀请。","soul_match":{"code":"TIDE","name":"深潮","emoji":"🌊","reason":"你的平静是TA情绪风暴中最渴望的港湾"},"soul_clash":{"code":"WEAVE","name":"编织者","emoji":"🧵","reason":"TA的梦是一整本小说，你的梦是一页空白，对话很难开始"},"color":"#C9CCD5","gradient":["#C9CCD5","#E8EAED"],"pattern":{"D1":"L","D2":"L","D3":"L","E1":"L","E2":"L","E3":"L","W1":"L","W2":"L","W3":"L","S1":"L","S2":"L","S3":"L","I1":"L","I2":"L","I3":"L"}},{"code":"SHARD","name":"碎镜","emoji":"🪞","quote":"你的梦不是在虚构，是在用碎片还原你还没来得及看清的真相。","tags":["碎片拼图者","日常解码者","细节收集者"],"description":"你的梦是一面被打碎的镜子——每一片碎片里都映着一段现实的倒影。\n\n你不会做太离奇的梦，但你的梦极度写实——写实到让你分不清这到底是梦还是昨天的回忆。碎镜型的人是天生的细节观察者。\n\n那些看似杂乱的碎片其实不是没有逻辑——它们在告诉你，你的世界比你以为的更丰富。","dream_feature":"梦境以现实碎片为主，经常出现白天的人、事、场景的变体。画面跳跃、片段化。","strengths":["细节观察力","信息处理敏感度","现实感知力"],"weaknesses":["梦缺乏深度叙事","信息过载的可能"],"advice":"如果最近的梦太碎太杂，可能是白天接收了太多信息。试着在睡前给大脑十分钟的安静。","soul_match":{"code":"WEAVE","name":"编织者","emoji":"🧵","reason":"你提供碎片，TA负责编织，一起就是最完整的故事"},"soul_clash":{"code":"DEJA","name":"既视","emoji":"👁️","reason":"你的碎片和TA的既视感叠加，会让一切都变得更加混乱"},"color":"#B0A695","gradient":["#B0A695","#D4CCBE"],"pattern":{"D1":"M","D2":"H","D3":"M","E1":"L","E2":"L","E3":"L","W1":"L","W2":"L","W3":"L","S1":"L","S2":"M","S3":"M","I1":"L","I2":"L","I3":"H"}},{"code":"MAZE","name":"迷径","emoji":"🌀","quote":"你在梦里走了一万条路。但你要找的从来不是出口，而是意义。","tags":["寻路者","永恒探索者","迷宫旅人"],"description":"你的梦里总有一条路要走，一扇门要找，一个地方要到达——但你从来没有真正到过。\n\n迷径型的梦境不是焦虑的产物，而是你内心深处「寻找」本能的投射。你一直在走向某个地方，即使你自己也说不清那是哪里。\n\n也许真正重要的不是找到终点，而是你在迷路的过程中看到的那些风景。","dream_feature":"经常在梦中迷路、寻找、在复杂的建筑和空间中穿梭。有微妙的焦虑感但不至于恐怖。","strengths":["目标驱动力","不轻易放弃","探索精神"],"weaknesses":["容易陷入焦虑","对不确定性耐受度低"],"advice":"下次在梦里迷路的时候，试着停下来。不是放弃，而是看看你脚下站着的地方。","soul_match":{"code":"BIRD","name":"飞鸟","emoji":"🕊️","reason":"你在地面寻路，TA在空中看见全局——TA是你最好的导航"},"soul_clash":{"code":"SOLO","name":"独影","emoji":"🌑","reason":"你在找路，TA不需要路，你们的梦在根本命题上就不同"},"color":"#6A8D73","gradient":["#6A8D73","#A3C4A8"],"pattern":{"D1":"M","D2":"H","D3":"M","E1":"M","E2":"M","E3":"M","W1":"M","W2":"M","W3":"H","S1":"L","S2":"H","S3":"L","I1":"L","I2":"L","I3":"H"}},{"code":"CROWD","name":"潮声","emoji":"🎭","quote":"你的梦从不缺人。因为你的心，天生是一个容得下很多人的地方。","tags":["人群感知者","关系编织者","社交梦境者"],"description":"你的梦里永远不缺群演。他们在你的梦境里来来往往，构成了一幅流动的群像画。\n\n这说明你是一个对人际关系高度敏感的人。你的潜意识在睡眠中依然在处理那些白天来不及消化的社交信息。\n\n你的梦是你内心关系网的投影。在那些热闹的画面背后，你的潜意识想告诉你的可能是：在照顾所有人之前，记得先照顾自己。","dream_feature":"梦中总是人来人往，经常出现聚会、宴席、人群等社交场景。互动频繁，对话丰富。","strengths":["社交敏感度","人际关系觉知","群体融入力"],"weaknesses":["容易忽略自己的需求","情感消耗过大"],"advice":"在梦的人群里找一个安静的角落坐下来。如果你在梦里都不给自己留一个位置，现实中你也不会。","soul_match":{"code":"SOLO","name":"独影","emoji":"🌑","reason":"TA的安静刚好是你需要的休息，你的热闹刚好是TA需要的温度"},"soul_clash":{"code":"MIST","name":"薄雾","emoji":"🌫️","reason":"你的梦充满了人和故事，TA的梦却什么都留不住，你们的分享会落空"},"color":"#C97C5D","gradient":["#C97C5D","#E3B5A0"],"pattern":{"D1":"M","D2":"H","D3":"M","E1":"H","E2":"L","E3":"M","W1":"M","W2":"M","W3":"L","S1":"M","S2":"H","S3":"H","I1":"L","I2":"L","I3":"H"}},{"code":"SOLO","name":"独影","emoji":"🌑","quote":"你的梦很安静。安静到你能听见自己灵魂的形状。","tags":["独行者","内在宇宙","静默灵魂"],"description":"你的梦是一场盛大的独白。没有配角，没有群演——整个梦境世界里只有你和你的影子。\n\n但这不是孤独。这是你的潜意识在进行最深度的自我对话。独影型的人在现实中往往拥有一个极其丰富的内心世界。\n\n你的梦在告诉你：你是一个完整的人。你不需要任何人来填补你的空白——因为那不是空白，那是你给自己留的呼吸的空间。","dream_feature":"梦境中几乎没有其他人出现。场景空旷、安静——空无一人的城市、无边的旷野。氛围不是凄凉，而是一种自足的静谧。","strengths":["深度内省力","自我认知清晰","独处能力强"],"weaknesses":["情感表达通道少","可能回避亲密关系"],"advice":"你的独处是力量，但偶尔也在梦里给某个人留一个位置吧。不是因为你需要，而是因为被你选中的人一定很特别。","soul_match":{"code":"CROWD","name":"潮声","emoji":"🎭","reason":"TA的热闹能温暖你的沉默，你的深度能让TA真正安静下来"},"soul_clash":{"code":"BLAZE","name":"燃烧者","emoji":"🔥","reason":"TA的梦太热烈太喧嚣，会打破你珍惜的那份静谧"},"color":"#5C5470","gradient":["#5C5470","#9B8EC0"],"pattern":{"D1":"M","D2":"M","D3":"M","E1":"M","E2":"L","E3":"M","W1":"M","W2":"L","W3":"M","S1":"M","S2":"H","S3":"L","I1":"L","I2":"M","I3":"H"}},{"code":"DEEP","name":"静渊","emoji":"🐋","quote":"你的梦是深海。不是因为看不见底，而是因为在那种深度里，一切都变得安静。","tags":["深海灵魂","治愈之源","沉静守望者"],"description":"你的梦是一片深蓝色的海——安静得像整个世界都按下了静音键。只有缓慢流动的水，温柔包裹着你的光。\n\n静渊型的人拥有一种罕见的内在定力。你的情绪不是没有波澜，而是你的深度足以容纳所有波澜而不溢出。\n\n在这个太过喧嚣的世界里，你的存在本身就是一种治愈。就像深海——它什么都不说，但所有的河流都向它流去。","dream_feature":"梦境宁静、深邃，常出现大海、森林、夜空等自然元素。色调偏蓝绿，画面流动缓慢。醒来后身心有被修复过的感觉。","strengths":["情绪稳定力","自我修复力","安抚他人的能力"],"weaknesses":["可能压抑了激烈的情感","被误解为什么都无所谓"],"advice":"你的平静是珍贵的天赋。但偶尔也允许自己的梦有一点波浪——那些你压下去的感受，也值得被看见。","soul_match":{"code":"TIDE","name":"深潮","emoji":"🌊","reason":"你的深水能接住TA所有的潮汐，这是最温柔的承载"},"soul_clash":{"code":"DARK","name":"夜行者","emoji":"🌑","reason":"你们的深邃叠加在一起太重了，需要有人先浮上水面"},"color":"#4A6670","gradient":["#4A6670","#8AABB5"],"pattern":{"D1":"M","D2":"M","D3":"M","E1":"L","E2":"L","E3":"L","W1":"M","W2":"L","W3":"L","S1":"M","S2":"M","S3":"L","I1":"L","I2":"M","I3":"M"}},{"code":"ORACLE","name":"预言","emoji":"🔮","quote":"你的梦不是回忆，也不是想象。它是你的潜意识写给未来的信，只是收件人是你自己。","tags":["未来感知者","趋势先觉","直觉解码者"],"description":"你做的梦有一种让人不安的精准——梦里出现的场景、对话甚至表情，过几天竟然在现实中上演了。\n\n预言型的潜意识是一个超强的模式识别系统。它在你睡着时处理了大量你在清醒时忽略的微小信号。\n\n你不是能预见未来的人，你是比大多数人都更早感知到变化的人。","dream_feature":"梦境中的场景在现实中反复「应验」。梦境内容偏写实，常涉及具体的人和事。","strengths":["直觉敏锐","趋势感知力","模式识别力"],"weaknesses":["容易过度解读","可能混淆感知和期待"],"advice":"记录你的梦，但不要急着赋予它意义。让时间来告诉你，哪些是信号，哪些是噪音。","soul_match":{"code":"DEJA","name":"既视","emoji":"👁️","reason":"你感知未来，TA触碰过去，一起你们能看见时间的全貌"},"soul_clash":{"code":"FLOAT","name":"漂流","emoji":"☁️","reason":"你的梦有重量和方向，TA的梦轻得像云——你们的时间感完全不同"},"color":"#7B6B8D","gradient":["#7B6B8D","#B5A8C3"],"pattern":{"D1":"H","D2":"M","D3":"H","E1":"M","E2":"L","E3":"M","W1":"L","W2":"H","W3":"M","S1":"M","S2":"M","S3":"M","I1":"H","I2":"H","I3":"H"}},{"code":"MUSE","name":"灵泉","emoji":"🎨","quote":"别人的灵感来自生活。你的灵感来自另一个你在深夜写下的东西。","tags":["灵感泉眼","梦境创作者","暗夜艺术家"],"description":"你的梦是一座取之不尽的灵感矿藏。那些在梦中闪现的画面、色彩、旋律、句子，醒来后竟然真的能用。\n\n灵泉型的潜意识是一间24小时运转的创意工作室。当你的意识休息时，你的大脑在做最大胆的尝试。\n\n你或许不知道自己的下一个好点子会在哪个梦里等你——但你知道它一定会来。","dream_feature":"梦境充满奇异而美丽的意象组合——不存在的颜色、没听过的旋律、从未见过的风景。醒来后常有「这个太好了」的惊喜感。","strengths":["创造力无限","跨领域联想力","灵感永不枯竭"],"weaknesses":["梦中灵感落地有落差","容易活在自己的世界"],"advice":"在床头准备纸笔或录音设备。梦中灵感的保质期只有几分钟——抓住它，然后用清醒的手把它做出来。","soul_match":{"code":"MIRROR","name":"镜像","emoji":"🪞","reason":"TA的务实能帮你把梦里的灵感带回现实的地面"},"soul_clash":{"code":"VOID","name":"空白","emoji":"⬜","reason":"你的梦是满溢的灵感，TA的梦里空无一物，你的热情找不到回应"},"color":"#C08497","gradient":["#C08497","#D9B8C4"],"pattern":{"D1":"H","D2":"H","D3":"H","E1":"M","E2":"L","E3":"M","W1":"H","W2":"M","W3":"L","S1":"M","S2":"M","S3":"M","I1":"M","I2":"H","I3":"L"}},{"code":"MIRROR","name":"镜像","emoji":"🪞","quote":"你的梦不造梦。它只是把你白天没敢看的东西，在夜里放大给你看。","tags":["现实映照者","内心温度计","务实之人"],"description":"你的梦是现实的一面镜子——不是哈哈镜，而是那种诚实到有点残忍的普通镜子。\n\n镜像型的人是最接地气的梦境者。你的潜意识选择了直面——它每晚都在帮你做情绪的体检报告。\n\n这种务实让你拥有极强的自我觉察力。你的梦是你最诚实的朋友。","dream_feature":"梦境与现实高度重叠，经常梦到工作、家庭、社交中正在发生的事。场景写实，极少出现超现实元素。","strengths":["自我觉察力","问题诊断力","务实不逃避"],"weaknesses":["梦缺乏想象力","容易把焦虑带进睡眠"],"advice":"你的梦是你的内心日记。如果同一个主题反复出现，就是它在催你：这件事，是时候认真面对了。","soul_match":{"code":"MUSE","name":"灵泉","emoji":"🎨","reason":"TA的天马行空能给你太过写实的梦境加一点想象力的色彩"},"soul_clash":{"code":"BIRD","name":"飞鸟","emoji":"🕊️","reason":"你的梦紧贴地面，TA的梦飞在天上——你们看世界的高度不一样"},"color":"#7E8C72","gradient":["#7E8C72","#B5C4A3"],"pattern":{"D1":"M","D2":"H","D3":"M","E1":"M","E2":"M","E3":"H","W1":"L","W2":"M","W3":"H","S1":"L","S2":"H","S3":"H","I1":"M","I2":"L","I3":"H"}},{"code":"FLOAT","name":"漂流","emoji":"☁️","quote":"你的梦很轻。轻到可以放在手心，然后看它被风吹走。","tags":["云中旅者","轻盈灵魂","风的孩子"],"description":"你的梦有一种独特的失重感。不是飞行，而是漂浮——像一片叶子落在水面上，像一朵云在无人的天空里慢慢变换形状。\n\n漂流型的梦境是极简主义的杰作。你的潜意识像一个很有品味的策展人，用最少的元素创造出最空灵的体验。\n\n在这个太用力的世界里，你的轻盈是一种稀缺品。","dream_feature":"梦境有漂浮和失重的体感，场景空旷、明亮、色彩淡雅。像一幅水彩画在眼前慢慢化开。","strengths":["内心平和","审美感知力","不被外界裹挟"],"weaknesses":["回避现实冲突","行动力偏弱"],"advice":"你的轻盈是天赋，但偶尔让自己落地一次——脚踩大地的感觉，和飘在空中一样美。","soul_match":{"code":"DARK","name":"夜行者","emoji":"🌑","reason":"你的轻盈是TA黑夜里最需要的那缕月光"},"soul_clash":{"code":"ECHO","name":"回声","emoji":"🔁","reason":"你随风飘荡，TA在原地打转，你们的节奏很难同步"},"color":"#C5B9A3","gradient":["#C5B9A3","#E5DFD3"],"pattern":{"D1":"L","D2":"M","D3":"L","E1":"L","E2":"L","E3":"L","W1":"M","W2":"L","W3":"L","S1":"M","S2":"M","S3":"L","I1":"L","I2":"M","I3":"L"}},{"code":"BLAZE","name":"燃烧者","emoji":"🔥","quote":"你的梦从不小声说话。它要么沉默，要么尖叫——没有中间地带。","tags":["能量爆发者","极限梦境者","不灭的火"],"description":"你的梦是一场永不停歇的风暴。你的潜意识只会用最大的音量播放一切。你的梦境像一部永远在高潮的电影。\n\n燃烧者的内心有着巨大的能量——那种不甘于平淡、需要被点燃的能量。你不是那种可以温温吞吞过一生的人。\n\n但火也需要呼吸。最持久的火焰不是烧得最猛的那一团，而是知道什么时候需要慢下来的那一簇。","dream_feature":"梦境节奏极快、事件密集——追逐、灾难、对决、巨变。画面色彩浓烈、对比强烈。醒来后常常心跳加速。","strengths":["能量充沛","危机处理力","不惧混乱"],"weaknesses":["睡眠消耗大","难以真正放松"],"advice":"你的火需要合适的出口。白天多做让身体出汗的事——跑步、游泳、跳舞。让能量在白天流动，夜晚才能安静下来。","soul_match":{"code":"DEEP","name":"静渊","emoji":"🐋","reason":"TA的深水能让你的火找到温度，不至于灼伤自己"},"soul_clash":{"code":"GHOST","name":"幽灵","emoji":"👻","reason":"你燃烧得太猛烈，TA习惯在远处旁观，你的热情找不到回应"},"color":"#A4593D","gradient":["#A4593D","#D4956B"],"pattern":{"D1":"H","D2":"H","D3":"M","E1":"H","E2":"H","E3":"H","W1":"H","W2":"H","W3":"L","S1":"M","S2":"H","S3":"H","I1":"L","I2":"L","I3":"M"}}],"scoring":{"method":"pattern_match","thresholds":{"H":3,"L":-3}}};
 
-// 15 dimensions grouped in 5 models
-const DIMENSION_GROUPS = [
-  { name: '梦境深度', color: '#667eea', dims: ['D1','D2','D3'], labels: ['沉浸度','记忆清晰度','层次感'] },
-  { name: '情感色彩', color: '#f093fb', dims: ['E1','E2','E3'], labels: ['情绪强度','情感倾向','共情深度'] },
-  { name: '意志力量', color: '#00cec9', dims: ['W1','W2','W3'], labels: ['控制力','决断力','坚韧度'] },
-  { name: '社交图谱', color: '#fdcb6e', dims: ['S1','S2','S3'], labels: ['角色数量','关系深度','互动方式'] },
-  { name: '想象维度', color: '#fd79a8', dims: ['I1','I2','I3'], labels: ['场景创造','逻辑扭曲','感官丰富度'] }
-];
-const ALL_DIMS = DIMENSION_GROUPS.flatMap(g => g.dims);
-
-// Placeholder questions (25 questions, 3 options each)
-const PLACEHOLDER_QUESTIONS = [];
-for (let i = 1; i <= 25; i++) {
-  const scores = {};
-  ALL_DIMS.forEach(d => scores[d] = 0);
-  PLACEHOLDER_QUESTIONS.push({
-    id: i, text: `占位题目 ${i}：这是一道关于梦境的测试题？`,
-    options: [
-      { text: `选项A - 第${i}题`, scores: {...scores} },
-      { text: `选项B - 第${i}题`, scores: {...scores} },
-      { text: `选项C - 第${i}题`, scores: {...scores} }
-    ]
-  });
-}
-
-// Placeholder personalities
-const PLACEHOLDER_PERSONALITIES = [{
-  code: 'LUCID', name: '清醒梦者', emoji: '🌟',
-  slogan: '在梦与醒之间自由穿行',
-  description: '你拥有极强的梦境意识，能在梦中保持清醒并主导剧情走向。你的潜意识是一个永不关机的创意引擎。',
-  dreamFeature: '经常梦到飞行、太空、未知星球，画面感极强，常能在梦中意识到自己在做梦。',
-  strengths: ['清醒梦体质','创意引擎','梦境导演'],
-  weaknesses: ['过度思考','难以放松'],
-  advice: '你的梦是灵感宝库，醒来先录一段语音备忘。学会在梦中放手，让潜意识自由流动。',
-  partner: { code: 'DRIFT', name: '漂流旅人', emoji: '🌊', reason: '你的清醒与TA的随性完美互补' },
-  gradient: ['#667eea','#764ba2'],
-  pattern: {}
-}];
+const ALL_DIMS = DATA.dimensions.map(d=>d.id);
 
 // ===== STATE =====
-let currentQuestion = 0;
-let answers = [];
-let dimScores = {};
-let isTransitioning = false;
-let currentResult = null;
-let currentMatchPct = 0;
+let currentQuestion=0, answers=[], dimScores={}, isTransitioning=false, currentResult=null, currentMatchPct=0;
+const isPremiumUnlocked = true; // Set to false to enable paywall
 
-// ===== LOAD DATA =====
-async function loadData() {
-  return DATA !== null;
-}
-
-function getQuestions() {
-  return DATA ? DATA.questions : PLACEHOLDER_QUESTIONS;
-}
-function getPersonalities() {
-  return DATA ? DATA.types : PLACEHOLDER_PERSONALITIES;
-}
-function getDimensionGroups() {
-  if (!DATA || !DATA.dimensions) return DIMENSION_GROUPS;
-  // Build groups from flat dimensions list by model
-  const modelMap = {};
-  const modelColors = {'梦境感知':'#667eea','梦境情绪':'#f093fb','梦境世界':'#00cec9','梦中自我':'#fdcb6e','梦境洞察':'#fd79a8'};
-  DATA.dimensions.forEach(d => {
-    if (!modelMap[d.model]) modelMap[d.model] = { name: d.model, color: modelColors[d.model] || '#667eea', dims: [], labels: [] };
-    modelMap[d.model].dims.push(d.id);
-    modelMap[d.model].labels.push(d.name);
-  });
-  return Object.values(modelMap);
-}
-function findTypeByCode(code) {
-  const types = getPersonalities();
-  return types.find(t => t.code === code);
-}
-
-// ===== INIT =====
-function initStars() {
-  const c = document.getElementById('starsContainer');
-  for (let i = 0; i < 70; i++) {
-    const s = document.createElement('div');
-    s.className = 'star';
-    const sz = Math.random() * 3 + 1;
-    s.style.cssText = `width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--duration:${Math.random()*3+2}s;--max-opacity:${Math.random()*.6+.2};animation-delay:${Math.random()*3}s`;
-    c.appendChild(s);
-  }
-  const colors = ['rgba(102,126,234,.3)','rgba(118,75,162,.3)','rgba(240,147,251,.2)'];
-  for (let i = 0; i < 3; i++) {
-    const o = document.createElement('div');
-    o.className = 'orb';
-    const sz = Math.random() * 200 + 100;
-    o.style.cssText = `width:${sz}px;height:${sz}px;background:${colors[i]};left:${Math.random()*80}%;top:${Math.random()*80}%;--duration:${Math.random()*8+6}s;--tx:${(Math.random()-.5)*100}px;--ty:${(Math.random()-.5)*100}px;animation-delay:${Math.random()*4}s`;
-    c.appendChild(o);
-  }
-}
-
-function showPage(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+// ===== PAGE NAV =====
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
 
 // ===== QUIZ =====
-function startQuiz() {
-  currentQuestion = 0;
-  answers = [];
-  dimScores = {};
-  ALL_DIMS.forEach(d => dimScores[d] = 0);
-  isTransitioning = false;
-  showPage('page-quiz');
-  renderQuestion();
+function startQuiz(){
+  currentQuestion=0;answers=[];dimScores={};isTransitioning=false;
+  ALL_DIMS.forEach(d=>dimScores[d]=0);
+  showPage('page-quiz');renderQuestion();
 }
-
-function renderQuestion() {
-  const qs = getQuestions();
-  const q = qs[currentQuestion];
-  const total = qs.length;
-  document.getElementById('progressFill').style.width = `${(currentQuestion/total)*100}%`;
-  document.getElementById('progressText').textContent = `${currentQuestion+1} / ${total}`;
-  document.getElementById('questionNumber').textContent = `QUESTION ${String(currentQuestion+1).padStart(2,'0')}`;
-  document.getElementById('questionText').textContent = q.text;
-  document.getElementById('btnBack').disabled = currentQuestion === 0;
-  const ol = document.getElementById('optionsList');
-  ol.innerHTML = '';
-  q.options.forEach((opt, idx) => {
-    const btn = document.createElement('button');
-    btn.className = 'option-btn';
-    btn.textContent = opt.text;
-    btn.onclick = () => selectOption(idx);
-    ol.appendChild(btn);
+function renderQuestion(){
+  const qs=DATA.questions,q=qs[currentQuestion],total=qs.length;
+  document.getElementById('progressFill').style.width=`${(currentQuestion/total)*100}%`;
+  document.getElementById('progressText').textContent=`${String(currentQuestion+1).padStart(2,'0')} / ${total}`;
+  document.getElementById('questionNumber').textContent=String(currentQuestion+1).padStart(2,'0');
+  document.getElementById('questionText').textContent=q.text;
+  document.getElementById('btnBack').disabled=currentQuestion===0;
+  const ol=document.getElementById('optionsList');ol.innerHTML='';
+  q.options.forEach((opt,idx)=>{
+    const btn=document.createElement('button');btn.className='option-btn';
+    btn.textContent=opt.text;btn.onclick=()=>selectOption(idx);ol.appendChild(btn);
   });
 }
-
-function selectOption(idx) {
-  if (isTransitioning) return;
-  isTransitioning = true;
-  const qs = getQuestions();
-  const q = qs[currentQuestion];
-  const optScores = q.options[idx].scores;
-  // Store answer
-  answers[currentQuestion] = idx;
-  // Add scores
-  Object.keys(optScores).forEach(d => { dimScores[d] = (dimScores[d]||0) + optScores[d]; });
-  // Visual feedback
+function selectOption(idx){
+  if(isTransitioning)return;isTransitioning=true;
+  const q=DATA.questions[currentQuestion],sc=q.options[idx].scores;
+  answers[currentQuestion]=idx;
+  Object.keys(sc).forEach(d=>{dimScores[d]=(dimScores[d]||0)+sc[d]});
   document.querySelectorAll('.option-btn')[idx].classList.add('selected');
-  const total = qs.length;
-  document.getElementById('progressFill').style.width = `${((currentQuestion+1)/total)*100}%`;
-  setTimeout(() => {
-    currentQuestion++;
-    if (currentQuestion >= qs.length) { showLoading(); }
-    else { transitionNext(); }
-  }, 450);
+  const total=DATA.questions.length;
+  document.getElementById('progressFill').style.width=`${((currentQuestion+1)/total)*100}%`;
+  setTimeout(()=>{currentQuestion++;currentQuestion>=total?showLoading():transitionNext()},400);
 }
-
-function goBack() {
-  if (currentQuestion <= 0 || isTransitioning) return;
-  isTransitioning = true;
-  // Undo last answer scores
-  const qs = getQuestions();
-  const prevIdx = answers[currentQuestion - 1];
-  if (prevIdx !== undefined) {
-    const prevScores = qs[currentQuestion-1].options[prevIdx].scores;
-    Object.keys(prevScores).forEach(d => { dimScores[d] -= prevScores[d]; });
-  }
-  currentQuestion--;
-  answers.length = currentQuestion;
-  const card = document.getElementById('quizCard');
-  card.classList.add('fade-out');
-  setTimeout(() => {
-    card.classList.remove('fade-out');
-    card.classList.add('fade-in');
-    renderQuestion();
-    requestAnimationFrame(() => { requestAnimationFrame(() => {
-      card.classList.add('show');
-      setTimeout(() => { card.classList.remove('fade-in','show'); isTransitioning = false; }, 400);
-    }); });
-  }, 300);
+function goBack(){
+  if(currentQuestion<=0||isTransitioning)return;isTransitioning=true;
+  const prev=answers[currentQuestion-1];
+  if(prev!==undefined){const sc=DATA.questions[currentQuestion-1].options[prev].scores;Object.keys(sc).forEach(d=>{dimScores[d]-=sc[d]})}
+  currentQuestion--;answers.length=currentQuestion;
+  const card=document.getElementById('quizCard');card.classList.add('fade-out');
+  setTimeout(()=>{card.classList.remove('fade-out');card.classList.add('fade-in');renderQuestion();
+    requestAnimationFrame(()=>{requestAnimationFrame(()=>{card.classList.add('show');
+      setTimeout(()=>{card.classList.remove('fade-in','show');isTransitioning=false},400)})})},250);
 }
-
-function transitionNext() {
-  const card = document.getElementById('quizCard');
-  card.classList.add('fade-out');
-  setTimeout(() => {
-    card.classList.remove('fade-out');
-    card.classList.add('fade-in');
-    renderQuestion();
-    requestAnimationFrame(() => { requestAnimationFrame(() => {
-      card.classList.add('show');
-      setTimeout(() => { card.classList.remove('fade-in','show'); isTransitioning = false; }, 400);
-    }); });
-  }, 300);
+function transitionNext(){
+  const card=document.getElementById('quizCard');card.classList.add('fade-out');
+  setTimeout(()=>{card.classList.remove('fade-out');card.classList.add('fade-in');renderQuestion();
+    requestAnimationFrame(()=>{requestAnimationFrame(()=>{card.classList.add('show');
+      setTimeout(()=>{card.classList.remove('fade-in','show');isTransitioning=false},400)})})},250);
 }
 
 // ===== LOADING =====
-function showLoading() {
+function showLoading(){
   showPage('page-loading');
-  const texts = ['正在扫描你的梦境数据库...','匹配梦境人格模型...','生成你的专属分析报告...'];
-  const el = document.getElementById('loadingText');
-  let i = 0;
-  el.textContent = texts[0];
-  const iv = setInterval(() => {
-    i++;
-    if (i < texts.length) {
-      el.classList.add('fade');
-      setTimeout(() => { el.textContent = texts[i]; el.classList.remove('fade'); }, 400);
-    }
-  }, 1200);
-  setTimeout(() => { clearInterval(iv); calculateResult(); }, 3800);
+  const texts=['正在聆听你的梦境...','解码潜意识密码...','生成你的梦境灵魂...'];
+  const el=document.getElementById('loadingText');let i=0;el.textContent=texts[0];
+  const iv=setInterval(()=>{i++;if(i<texts.length){el.classList.add('fade');setTimeout(()=>{el.textContent=texts[i];el.classList.remove('fade')},400)}},1200);
+  setTimeout(()=>{clearInterval(iv);calculateResult()},3800);
 }
 
 // ===== CALCULATE =====
-function calculateResult() {
-  // Determine H/M/L for each dimension
-  const levels = {};
-  ALL_DIMS.forEach(d => {
-    const v = dimScores[d] || 0;
-    levels[d] = v > 3 ? 'H' : (v < -3 ? 'L' : 'M');
+function calculateResult(){
+  const levels={};
+  ALL_DIMS.forEach(d=>{const v=dimScores[d]||0;levels[d]=v>3?'H':(v<-3?'L':'M')});
+  let bestMatch=DATA.types[0],bestScore=-1,bestExtreme=-1;
+  DATA.types.forEach(p=>{
+    if(!p.pattern)return;let matched=0,extreme=0;
+    ALL_DIMS.forEach(d=>{if(p.pattern[d]===levels[d]){matched++;if(levels[d]==='H'||levels[d]==='L')extreme++}});
+    const score=matched/ALL_DIMS.length;
+    if(score>bestScore||(score===bestScore&&extreme>bestExtreme)){bestScore=score;bestMatch=p;bestExtreme=extreme}
   });
-
-  // Find best matching personality
-  const personalities = getPersonalities();
-  let bestMatch = personalities[0];
-  let bestScore = -1;
-  let bestExtreme = -1;
-
-  personalities.forEach(p => {
-    if (!p.pattern) return;
-    let matched = 0;
-    let extremeMatched = 0;
-    ALL_DIMS.forEach(d => {
-      if (p.pattern[d] === levels[d]) {
-        matched++;
-        if (levels[d] === 'H' || levels[d] === 'L') extremeMatched++;
-      }
-    });
-    const score = matched / ALL_DIMS.length;
-    if (score > bestScore || (score === bestScore && extremeMatched > bestExtreme)) {
-      bestScore = score;
-      bestMatch = p;
-      bestExtreme = extremeMatched;
-    }
-  });
-
-  currentMatchPct = Math.round(bestScore * 100);
-  if (currentMatchPct < 40) currentMatchPct = Math.floor(Math.random() * 20) + 60;
-  currentResult = bestMatch;
-  displayResult(bestMatch, currentMatchPct, levels);
+  currentMatchPct=Math.max(60,Math.round(bestScore*100));
+  currentResult=bestMatch;
+  displayResult(bestMatch,currentMatchPct,levels);
 }
 
-function displayResult(p, matchPct, levels) {
-  document.getElementById('resultEmoji').textContent = p.emoji;
-  document.getElementById('resultTypeCode').textContent = p.code;
-  document.getElementById('resultName').textContent = p.name;
-  document.getElementById('resultSlogan').textContent = p.slogan || '';
-  document.getElementById('resultDesc').textContent = p.description;
-  document.getElementById('resultTraits').textContent = p.dream_feature || p.dreamFeature || '';
-  document.getElementById('resultAdvice').textContent = p.advice;
-
-  // Use gradient color for name if available
-  if (p.gradient) {
-    document.getElementById('resultName').style.background = `linear-gradient(135deg, ${p.gradient[0]}, ${p.gradient[1]})`;
-    document.getElementById('resultName').style.webkitBackgroundClip = 'text';
-    document.getElementById('resultName').style.webkitTextFillColor = 'transparent';
-    document.getElementById('resultName').style.backgroundClip = 'text';
+// ===== DISPLAY RESULT =====
+function displayResult(p,matchPct,levels){
+  document.getElementById('resultName').textContent=p.name;
+  document.getElementById('resultQuote').textContent=p.quote||'';
+  // Traits
+  const tc=document.getElementById('resultTraits');tc.innerHTML='';
+  (p.tags||[]).forEach(t=>{const s=document.createElement('span');s.className='result-trait';s.textContent=t;tc.appendChild(s)});
+  // Desc
+  const desc=document.getElementById('resultDesc');
+  desc.innerHTML=(p.description||'').split('\n').filter(s=>s.trim()).map(s=>'<p>'+s+'</p>').join('');
+  // Dream features
+  document.getElementById('resultDream').innerHTML='<p>'+(p.dream_feature||'')+'</p>';
+  // Advice
+  document.getElementById('resultAdvice').innerHTML='<p>'+(p.advice||'')+'</p>';
+  // Soul match & soul clash
+  if(p.soul_match){
+    document.getElementById('soulMatchEmoji').textContent=p.soul_match.emoji||'💕';
+    document.getElementById('soulMatchName').textContent=p.soul_match.name||'---';
+    document.getElementById('soulMatchReason').textContent=p.soul_match.reason||'';
   }
-
-  // Strengths & weaknesses
-  const sEl = document.getElementById('resultStrengths');
-  sEl.innerHTML = '';
-  (p.strengths || []).forEach(t => { const s = document.createElement('span'); s.className='tag-strength'; s.textContent=t; sEl.appendChild(s); });
-  const wEl = document.getElementById('resultWeaknesses');
-  wEl.innerHTML = '';
-  (p.weaknesses || []).forEach(t => { const s = document.createElement('span'); s.className='tag-weakness'; s.textContent=t; wEl.appendChild(s); });
-
-  // Partner - handle both formats
-  if (p.partner) {
-    document.getElementById('partnerEmoji').textContent = p.partner.emoji;
-    document.getElementById('partnerName').textContent = p.partner.name;
-    document.getElementById('partnerReason').textContent = p.partner.reason;
-  } else if (p.match_code) {
-    const partner = findTypeByCode(p.match_code);
-    if (partner) {
-      document.getElementById('partnerEmoji').textContent = partner.emoji;
-      document.getElementById('partnerName').textContent = partner.name + ' (' + partner.code + ')';
-      document.getElementById('partnerReason').textContent = p.match_reason || '';
-    }
+  if(p.soul_clash){
+    document.getElementById('nemesisEmoji').textContent=p.soul_clash.emoji||'⚡';
+    document.getElementById('nemesisName').textContent=p.soul_clash.name||'---';
+    document.getElementById('nemesisReason').textContent=p.soul_clash.reason||'';
   }
-
-  // Dimension chart
-  renderDimensionChart(levels);
-
-  // Match ring animation
+  // Radar chart
+  renderRadar(levels);
+  // Dimension readings
+  renderDimReadings(levels);
+  // Premium wall
+  const block=document.getElementById('premiumBlock');
+  const btnWrap=document.getElementById('premiumBtnWrap');
+  if(!isPremiumUnlocked){block.classList.add('locked');btnWrap.style.display='block'}
+  else{block.classList.remove('locked');btnWrap.style.display='none'}
+  // Show page
   showPage('page-result');
-  setTimeout(() => {
-    const ring = document.getElementById('matchRing');
-    const circumference = 2 * Math.PI * 54;
-    ring.style.strokeDashoffset = circumference - (circumference * matchPct / 100);
-    animateNumber('matchNum', 0, matchPct, 1500);
-  }, 300);
-
+  // Animate match %
+  setTimeout(()=>animateNumber('matchNum',0,matchPct,1200),300);
   // Setup share card
-  setupShareCard(p, matchPct);
+  setupShareCard(p,matchPct,levels);
 }
 
-function animateNumber(elId, from, to, duration) {
-  const el = document.getElementById(elId);
-  const start = performance.now();
-  function tick(now) {
-    const progress = Math.min((now - start) / duration, 1);
-    const eased = 1 - Math.pow(1 - progress, 3);
-    el.textContent = Math.round(from + (to - from) * eased);
-    if (progress < 1) requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
-}
-
-function renderDimensionChart(levels) {
-  const groups = getDimensionGroups();
-  const container = document.getElementById('dimensionChart');
-  container.innerHTML = '';
-  groups.forEach(g => {
-    const div = document.createElement('div');
-    div.className = 'dim-group';
-    div.innerHTML = `<div class="dim-group-title"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${g.color}"></span>${g.name}</div>`;
-    g.dims.forEach((d, i) => {
-      const level = levels[d] || 'M';
-      const pct = level === 'H' ? 90 : (level === 'M' ? 55 : 25);
-      const lColor = level === 'H' ? '#00cec9' : (level === 'M' ? '#667eea' : '#a29bfe');
-      div.innerHTML += `<div class="dim-row">
-        <span class="dim-label">${g.labels[i]}</span>
-        <div class="dim-bar-wrap"><div class="dim-bar" style="width:0%;background:${lColor}" data-target="${pct}"></div></div>
-        <span class="dim-level" style="color:${lColor}">${level}</span>
-      </div>`;
-    });
-    container.appendChild(div);
+// ===== RADAR CHART (SVG Pentagon) =====
+function renderRadar(levels){
+  const groups=DATA.dimension_groups;
+  const cx=140,cy=140,R=110;
+  const n=5;
+  const angles=[];for(let i=0;i<n;i++)angles.push(-Math.PI/2+i*2*Math.PI/n);
+  // Calculate group scores (avg of sub-dims, 0-1 scale)
+  const groupScores=groups.map(g=>{
+    let sum=0;g.dims.forEach(d=>{const v=dimScores[d]||0;sum+=Math.min(1,Math.max(0,(v+6)/12))});
+    return sum/g.dims.length;
   });
-  // Animate bars
-  setTimeout(() => {
-    container.querySelectorAll('.dim-bar').forEach(bar => {
-      bar.style.width = bar.dataset.target + '%';
+  // SVG
+  let svg=`<svg viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:260px">`;
+  // Grid rings
+  for(let ring=1;ring<=4;ring++){
+    const r=R*ring/4;let pts='';
+    for(let i=0;i<n;i++){const x=cx+r*Math.cos(angles[i]),y=cy+r*Math.sin(angles[i]);pts+=`${x},${y} `}
+    svg+=`<polygon points="${pts.trim()}" fill="none" stroke="#E8E0D8" stroke-width="${ring===4?1.5:0.8}"/>`;
+  }
+  // Axes
+  for(let i=0;i<n;i++){
+    svg+=`<line x1="${cx}" y1="${cy}" x2="${cx+R*Math.cos(angles[i])}" y2="${cy+R*Math.sin(angles[i])}" stroke="#E8E0D8" stroke-width="0.8"/>`;
+  }
+  // Data area
+  let dataPts='';
+  for(let i=0;i<n;i++){
+    const r=Math.max(0.15,groupScores[i])*R;
+    dataPts+=`${cx+r*Math.cos(angles[i])},${cy+r*Math.sin(angles[i])} `;
+  }
+  svg+=`<polygon points="${dataPts.trim()}" fill="rgba(196,162,101,0.15)" stroke="#C4A265" stroke-width="2"/>`;
+  // Data dots
+  for(let i=0;i<n;i++){
+    const r=Math.max(0.15,groupScores[i])*R;
+    const x=cx+r*Math.cos(angles[i]),y=cy+r*Math.sin(angles[i]);
+    svg+=`<circle cx="${x}" cy="${y}" r="4" fill="#C4A265"/>`;
+  }
+  // Labels
+  const labelR=R+22;
+  for(let i=0;i<n;i++){
+    const x=cx+labelR*Math.cos(angles[i]),y=cy+labelR*Math.sin(angles[i]);
+    const anchor=Math.abs(Math.cos(angles[i]))<0.1?'middle':(Math.cos(angles[i])>0?'start':'end');
+    svg+=`<text x="${x}" y="${y+4}" text-anchor="${anchor}" font-size="12" font-family="'Noto Serif SC',serif" fill="#8B7E74">${groups[i].name}</text>`;
+  }
+  svg+=`</svg>`;
+  document.getElementById('radarChart').innerHTML=svg;
+}
+
+function renderDimReadings(levels){
+  const container=document.getElementById('dimReadings');container.innerHTML='';
+  DATA.dimension_groups.forEach(g=>{
+    g.dims.forEach(d=>{
+      const dim=DATA.dimensions.find(x=>x.id===d);
+      if(!dim)return;
+      const level=levels[d]||'M';
+      const pct=level==='H'?85:(level==='M'?50:20);
+      container.innerHTML+=`<div class="dim-item"><span class="dim-name">${dim.name}</span><div class="dim-bar-wrap"><div class="dim-bar" style="width:0%" data-target="${pct}"></div></div><span class="dim-desc">${dim.description}</span></div>`;
     });
-  }, 200);
+  });
+  setTimeout(()=>{container.querySelectorAll('.dim-bar').forEach(b=>{b.style.width=b.dataset.target+'%'})},200);
 }
 
 // ===== SHARE =====
-function setupShareCard(p, matchPct) {
-  const card = document.getElementById('shareCard');
-  card.style.background = p.gradient ? `linear-gradient(160deg, ${p.gradient[0]}22 0%, #0a0a2e 40%, ${p.gradient[1]}22 100%)` : 'linear-gradient(160deg, #0a0a2e 0%, #1a1a4e 40%, #2a1a4e 100%)';
-  document.getElementById('shareEmoji').textContent = p.emoji;
-  document.getElementById('shareName').textContent = p.name;
-  document.getElementById('shareName').style.color = p.gradient ? p.gradient[1] : '#f093fb';
-  document.getElementById('shareCode').textContent = p.code;
-  document.getElementById('shareSlogan').textContent = p.slogan || '';
-  document.getElementById('shareMatch').innerHTML = `<span>${matchPct}</span><small>% 匹配</small>`;
-  const tc = document.getElementById('shareTraits');
-  tc.innerHTML = '';
-  (p.strengths || []).forEach(t => { const s = document.createElement('span'); s.className='share-card-trait'; s.textContent=t; tc.appendChild(s); });
+function setupShareCard(p,matchPct,levels){
+  document.getElementById('scName').textContent=p.name;
+  document.getElementById('scQuote').textContent=p.quote||'';
+  document.getElementById('scMatch').innerHTML=`<span>${matchPct}</span><small>% 匹配</small>`;
+  const tc=document.getElementById('scTraits');tc.innerHTML='';
+  (p.tags||[]).forEach(t=>{const s=document.createElement('span');s.className='sc-trait';s.textContent=t;tc.appendChild(s)});
+  // Mini radar for share card
+  const groups=DATA.dimension_groups;const n=5;const cx=70,cy=70,R=55;
+  const angles=[];for(let i=0;i<n;i++)angles.push(-Math.PI/2+i*2*Math.PI/n);
+  const groupScores=groups.map(g=>{let sum=0;g.dims.forEach(d=>{const v=dimScores[d]||0;sum+=Math.min(1,Math.max(0,(v+6)/12))});return sum/g.dims.length});
+  let svg=`<svg viewBox="0 0 140 140" width="140" height="140">`;
+  for(let ring=1;ring<=3;ring++){const r=R*ring/3;let pts='';for(let i=0;i<n;i++){pts+=`${cx+r*Math.cos(angles[i])},${cy+r*Math.sin(angles[i])} `}svg+=`<polygon points="${pts.trim()}" fill="none" stroke="#E8E0D8" stroke-width="0.5"/>`}
+  let dataPts='';for(let i=0;i<n;i++){const r=Math.max(0.15,groupScores[i])*R;dataPts+=`${cx+r*Math.cos(angles[i])},${cy+r*Math.sin(angles[i])} `}
+  svg+=`<polygon points="${dataPts.trim()}" fill="rgba(196,162,101,0.15)" stroke="#C4A265" stroke-width="1.5"/>`;
+  const lr=R+14;for(let i=0;i<n;i++){const x=cx+lr*Math.cos(angles[i]),y=cy+lr*Math.sin(angles[i]);const a=Math.abs(Math.cos(angles[i]))<0.1?'middle':(Math.cos(angles[i])>0?'start':'end');svg+=`<text x="${x}" y="${y+3}" text-anchor="${a}" font-size="9" fill="#8B7E74">${groups[i].name}</text>`}
+  svg+=`</svg>`;document.getElementById('scRadar').innerHTML=svg;
 }
 
-function generateShareCard() {
-  const wrapper = document.getElementById('shareCardWrapper');
+function generateShareCard(){
+  const wrapper=document.getElementById('shareCardWrapper');
   wrapper.style.position='fixed';wrapper.style.top='0';wrapper.style.left='0';
-  html2canvas(document.getElementById('shareCard'),{backgroundColor:'#0a0a2e',scale:2,useCORS:true,logging:false}).then(canvas => {
+  html2canvas(document.getElementById('shareCard'),{backgroundColor:'#FAF8F5',scale:2,useCORS:true,logging:false}).then(canvas=>{
     wrapper.style.top='-9999px';wrapper.style.left='-9999px';
-    const dataUrl = canvas.toDataURL('image/png');
-    canvas.toBlob(blob => {
-      if (navigator.share && navigator.canShare) {
-        try {
-          const file = new File([blob],'dream-result.png',{type:'image/png'});
-          if (navigator.canShare({files:[file]})) {
-            navigator.share({files:[file],title:'梦境人格测试结果'}).catch(() => showImagePreview(dataUrl));
-            return;
-          }
-        } catch(e){}
+    const dataUrl=canvas.toDataURL('image/png');
+    canvas.toBlob(blob=>{
+      if(navigator.share&&navigator.canShare){
+        try{const file=new File([blob],'dream-soul.png',{type:'image/png'});
+          if(navigator.canShare({files:[file]})){navigator.share({files:[file],title:'梦境灵魂测试'}).catch(()=>showImagePreview(dataUrl));return}}catch(e){}
       }
-      if (!/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        const link = document.createElement('a');
-        link.download='dream-personality.png';link.href=dataUrl;link.click();
-        showToast('卡片已保存 ✨');
-      } else {
-        showImagePreview(dataUrl);
-      }
+      if(!/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)){
+        const link=document.createElement('a');link.download='dream-soul.png';link.href=dataUrl;link.click();showToast('卡片已保存');
+      }else{showImagePreview(dataUrl)}
     },'image/png');
-  }).catch(() => { wrapper.style.top='-9999px';wrapper.style.left='-9999px'; showToast('生成失败，请重试'); });
+  }).catch(()=>{wrapper.style.top='-9999px';wrapper.style.left='-9999px';showToast('生成失败，请重试')});
 }
 
-function showImagePreview(dataUrl) {
-  const ov = document.createElement('div');
-  ov.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);z-index:10000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;box-sizing:border-box';
-  const tip = document.createElement('div');
-  tip.style.cssText='color:#fff;font-size:16px;margin-bottom:16px;text-align:center';
-  tip.textContent='📱 长按图片保存到相册';
-  const img = document.createElement('img');
-  img.src=dataUrl;
-  img.style.cssText='max-width:90%;max-height:70vh;border-radius:12px;box-shadow:0 0 30px rgba(102,126,234,.5)';
-  const cb = document.createElement('div');
-  cb.style.cssText='color:#aaa;font-size:15px;margin-top:20px;padding:10px 30px;border:1px solid #555;border-radius:20px;cursor:pointer';
-  cb.textContent='关闭';
-  cb.onclick=()=>ov.remove();
+function showImagePreview(dataUrl){
+  const ov=document.createElement('div');
+  ov.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);z-index:10000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;box-sizing:border-box';
+  const tip=document.createElement('div');tip.style.cssText='color:#fff;font-size:15px;margin-bottom:14px;text-align:center';tip.textContent='长按图片保存到相册';
+  const img=document.createElement('img');img.src=dataUrl;img.style.cssText='max-width:90%;max-height:70vh;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.3)';
+  const cb=document.createElement('div');cb.style.cssText='color:#ccc;font-size:14px;margin-top:16px;padding:8px 28px;border:1px solid #666;border-radius:20px;cursor:pointer';cb.textContent='关闭';cb.onclick=()=>ov.remove();
   ov.onclick=e=>{if(e.target===ov)ov.remove()};
-  ov.appendChild(tip);ov.appendChild(img);ov.appendChild(cb);
-  document.body.appendChild(ov);
+  ov.appendChild(tip);ov.appendChild(img);ov.appendChild(cb);document.body.appendChild(ov);
 }
 
-function restartQuiz() {
+// ===== UTILS =====
+function animateNumber(elId,from,to,dur){
+  const el=document.getElementById(elId);const start=performance.now();
+  function tick(now){const p=Math.min((now-start)/dur,1);const e=1-Math.pow(1-p,3);el.textContent=Math.round(from+(to-from)*e);if(p<1)requestAnimationFrame(tick)}
+  requestAnimationFrame(tick);
+}
+function restartQuiz(){
   currentQuestion=0;answers=[];dimScores={};isTransitioning=false;currentResult=null;currentMatchPct=0;
-  // Reset match ring
-  document.getElementById('matchRing').style.strokeDashoffset='339.292';
-  document.getElementById('matchNum').textContent='0';
-  showPage('page-welcome');
+  document.getElementById('matchNum').textContent='0';showPage('page-welcome');
 }
-
-function showToast(msg) {
-  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2500);
-}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
+function showPremiumModal(){document.getElementById('premiumModal').classList.add('show')}
+function closePremiumModal(){document.getElementById('premiumModal').classList.remove('show')}
 
 // ===== INIT =====
-document.addEventListener('DOMContentLoaded', async () => {
-  initStars();
-  await loadData();
-});
+document.addEventListener('DOMContentLoaded',()=>{});
 </script>
 </body>
 </html>
