@@ -6,8 +6,8 @@
 <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 <title>解码你的梦境灵魂</title>
 <meta name="description" content="20道题 · 5大维度 · 20种梦境人格，聆听潜意识写给你的信">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&display=swap&display=swap" rel="stylesheet">
+<!-- html2canvas 懒加载：点击生成分享卡片时动态引入 -->
 <style>
 :root{--bg:#FAF8F5;--text:#2D2D2D;--sub:#8B7E74;--gold:#C4A265;--brown:#D4A574;--gray-brown:#9B8A7A;--card:#FFFFFF;--border:#E8E0D8;--serif:'Noto Serif SC','Source Han Serif SC','STSong','SimSun',serif;--sans:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -18,42 +18,67 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
 #page-result{overflow-y:auto;justify-content:flex-start;padding-top:32px;padding-bottom:60px}
 @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 @keyframes breathe{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}
+@keyframes moonSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes slideInUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes selectBounce{0%{transform:scale(1)}40%{transform:scale(.98)}70%{transform:scale(1.02)}100%{transform:scale(1)}}
+@keyframes radarExpand{from{transform:scale(0)}to{transform:scale(1)}}
+@keyframes ripple{from{transform:scale(0);opacity:.4}to{transform:scale(3);opacity:0}}
 
 /* === WELCOME === */
 .welcome-content{text-align:center;animation:fadeIn .8s ease-out;max-width:420px}
 .welcome-icon{margin-bottom:28px}
 .welcome-icon svg{width:80px;height:80px;animation:breathe 4s ease-in-out infinite}
+.moon-outer-ring{animation:moonSpin 15s linear infinite;transform-origin:40px 40px}
 .welcome-title{font-family:var(--serif);font-size:clamp(28px,7vw,40px);font-weight:900;color:var(--text);margin-bottom:12px;line-height:1.3;letter-spacing:2px}
 .welcome-subtitle{font-size:clamp(14px,3.5vw,16px);color:var(--sub);margin-bottom:28px;line-height:1.8}
 .welcome-dims{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:32px;font-family:var(--serif);font-size:13px;color:var(--gray-brown);letter-spacing:1px}
+.welcome-dims span{position:relative;cursor:default}
 .welcome-dims span::after{content:' · ';color:var(--border)}
 .welcome-dims span:last-child::after{content:''}
-.btn-start{display:inline-block;padding:16px 56px;font-size:17px;font-weight:600;color:#fff;background:var(--gold);border:none;border-radius:30px;cursor:pointer;transition:all .3s ease;letter-spacing:3px;font-family:var(--sans)}
+/* Tooltip for dimension keywords */
+.dim-tooltip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%) translateY(4px);background:var(--text);color:#fff;font-size:11px;padding:5px 10px;border-radius:6px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:10;font-family:var(--sans);letter-spacing:.5px}
+.dim-tooltip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:4px solid transparent;border-top-color:var(--text)}
+.welcome-dims span:hover .dim-tooltip{opacity:1;transform:translateX(-50%) translateY(0)}
+.btn-start{display:inline-block;padding:16px 56px;font-size:17px;font-weight:600;color:#fff;background:var(--gold);border:none;border-radius:30px;cursor:pointer;transition:all .3s ease;letter-spacing:3px;font-family:var(--sans);position:relative;overflow:hidden}
 .btn-start:hover{background:#b8943e;transform:translateY(-2px);box-shadow:0 8px 24px rgba(196,162,101,.3)}
 .btn-start:active{transform:translateY(0)}
 .welcome-hint{margin-top:24px;font-size:13px;color:var(--gray-brown);letter-spacing:1px}
 
 /* === QUIZ === */
 .quiz-header{width:100%;max-width:480px;margin-bottom:24px;display:flex;align-items:center;gap:12px}
-.btn-back{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--card);color:var(--sub);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s;flex-shrink:0}
+.btn-back{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--card);color:var(--sub);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s;flex-shrink:0;position:relative;overflow:hidden}
 .btn-back:hover{border-color:var(--gold);color:var(--gold)}
 .btn-back:disabled{opacity:.3;cursor:not-allowed}
 .quiz-progress-wrap{flex:1}
 .progress-bar{width:100%;height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:8px}
 .progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--brown));border-radius:2px;transition:width .5s ease;width:0%}
+/* 题号新样式：大数字 + 共N题 */
+.progress-num{text-align:center;font-size:20px;font-weight:900;color:var(--text);font-family:var(--serif);line-height:1.1}
+.progress-total{text-align:center;font-size:11px;color:var(--sub);letter-spacing:1px;margin-top:2px}
+/* 保留旧 .progress-text 兼容 */
 .progress-text{text-align:center;font-size:13px;color:var(--sub);font-family:var(--serif);letter-spacing:2px}
-.quiz-card{width:100%;max-width:480px;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:32px 24px;transition:opacity .4s ease}
-.quiz-card.fade-out{opacity:0}
-.quiz-card.fade-in{opacity:0}
-.quiz-card.fade-in.show{opacity:1}
+/* 题目卡片进入动画：translateY+opacity */
+.quiz-card{width:100%;max-width:480px;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:32px 24px;transition:opacity .35s ease,transform .35s ease}
+.quiz-card.fade-out{opacity:0;transform:translateX(-18px)}
+.quiz-card.fade-out.going-back{transform:translateX(18px)}
+.quiz-card.fade-in{opacity:0;transform:translateX(18px)}
+.quiz-card.fade-in.going-back{transform:translateX(-18px)}
+.quiz-card.fade-in.show{opacity:1;transform:translateX(0)}
 .question-number{font-size:13px;color:var(--gold);font-family:var(--serif);letter-spacing:3px;margin-bottom:12px}
 .question-text{font-size:clamp(17px,4.2vw,20px);font-weight:500;line-height:1.7;margin-bottom:24px;color:var(--text)}
 .options-list{display:flex;flex-direction:column;gap:10px}
-.option-btn{width:100%;padding:14px 18px;font-size:14px;line-height:1.5;color:var(--text);background:var(--card);border:1px solid var(--border);border-radius:10px;cursor:pointer;text-align:left;transition:all .25s ease;position:relative}
-.option-btn:hover{border-color:var(--gold);background:rgba(196,162,101,.04)}
+/* B1 Fix: hover 只对真实鼠标设备生效，彻底消除移动端 hover 粘滞 */
+.option-btn{width:100%;padding:14px 18px;font-size:14px;line-height:1.5;color:var(--text);background:var(--card);border:1px solid var(--border);border-radius:10px;cursor:pointer;text-align:left;transition:border-color .25s ease,background .25s ease,transform .3s ease;position:relative;overflow:hidden}
+@media(hover:hover) and (pointer:fine){
+  .option-btn:hover{border-color:var(--gold);background:rgba(196,162,101,.04)}
+}
 .option-btn:active{transform:scale(.98)}
-.option-btn.selected{background:rgba(196,162,101,.08);border-color:var(--gold);color:var(--text)}
+.option-btn.selected{background:rgba(196,162,101,.08);border-color:var(--gold);color:var(--text);animation:selectBounce .3s ease-out}
 .option-btn.selected::after{content:'✓';position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--gold);font-weight:bold;font-size:16px}
+/* 长选项字体缩小 */
+.option-btn.long-text{font-size:13px}
+/* Ripple effect */
+.ripple-circle{position:absolute;border-radius:50%;background:rgba(196,162,101,.25);transform:scale(0);animation:ripple .6s linear;pointer-events:none}
 
 /* === LOADING === */
 .loading-content{text-align:center}
@@ -78,10 +103,22 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
 .match-pct-num small{font-size:16px;font-weight:400;color:var(--sub)}
 .match-label{font-size:12px;color:var(--sub);letter-spacing:2px}
 
+/* 人格名称入场动画 */
+.result-name-anim{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}
+.result-name-anim.visible{opacity:1;transform:translateY(0)}
+/* 标签错开动画 */
+.result-trait{opacity:0;transform:translateY(8px);transition:opacity .4s ease,transform .4s ease}
+.result-trait.visible{opacity:1;transform:translateY(0)}
+/* IntersectionObserver scroll fade-in */
+.scroll-fade{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
+.scroll-fade.visible{opacity:1;transform:translateY(0)}
+
 /* Radar */
 .radar-section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:16px;text-align:center}
 .radar-title{font-family:var(--serif);font-size:15px;color:var(--text);margin-bottom:16px;letter-spacing:2px}
 .radar-svg{max-width:280px;margin:0 auto}
+/* 雷达数据多边形扩张 */
+.radar-data-polygon{transform-origin:170px 170px;animation:radarExpand .8s cubic-bezier(.34,1.56,.64,1) .3s both}
 
 /* Sections */
 .result-section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:16px;text-align:left}
@@ -97,10 +134,14 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
 .radar-dim-sep{color:var(--gold)}
 .radar-dim-desc{color:var(--sub);font-size:12px}
 
-/* Match cards */
+/* Match cards - 契合/相克视觉区分 */
 .match-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
 .match-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px 16px;text-align:center}
-.match-card-label{font-size:12px;color:var(--sub);margin-bottom:8px;letter-spacing:1px}
+.match-card:first-child{border-top:3px solid #C4A265}
+.match-card:last-child{border-top:3px solid #7A5C48}
+.match-card:first-child .match-card-label{color:#C4A265}
+.match-card:last-child .match-card-label{color:#7A5C48}
+.match-card-label{font-size:12px;margin-bottom:8px;letter-spacing:1px}
 .match-card-emoji{font-size:36px;display:block;margin-bottom:6px}
 .match-card-name{font-family:var(--serif);font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px}
 .match-card-reason{font-size:11px;color:var(--sub);line-height:1.6}
@@ -109,17 +150,19 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
 .premium-overlay{position:relative}
 .premium-overlay.locked::after{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(to bottom,rgba(250,248,245,0) 0%,rgba(250,248,245,.95) 40%,rgba(250,248,245,1) 100%);border-radius:16px;z-index:2;pointer-events:none}
 .premium-btn-wrap{text-align:center;margin-bottom:16px;position:relative;z-index:3}
-.btn-premium{display:inline-block;padding:14px 36px;font-size:15px;font-weight:600;color:#fff;background:linear-gradient(135deg,var(--gold),var(--brown));border:none;border-radius:30px;cursor:pointer;letter-spacing:2px;transition:all .3s}
+.btn-premium{display:inline-block;padding:14px 36px;font-size:15px;font-weight:600;color:#fff;background:linear-gradient(135deg,var(--gold),var(--brown));border:none;border-radius:30px;cursor:pointer;letter-spacing:2px;transition:all .3s;position:relative;overflow:hidden}
 .btn-premium:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(196,162,101,.3)}
 
 /* Actions */
 .result-actions{display:flex;gap:12px;margin-top:8px;margin-bottom:16px}
-.btn-share,.btn-restart{flex:1;padding:14px;font-size:14px;font-weight:600;border:none;border-radius:12px;cursor:pointer;transition:all .3s;letter-spacing:2px}
+.btn-share,.btn-restart{flex:1;padding:14px;font-size:14px;font-weight:600;border:none;border-radius:12px;cursor:pointer;transition:all .3s;letter-spacing:2px;position:relative;overflow:hidden}
 .btn-share{background:var(--gold);color:#fff}
 .btn-share:hover{background:#b8943e;transform:translateY(-2px)}
 .btn-restart{background:var(--card);border:1px solid var(--border);color:var(--sub)}
 .btn-restart:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px)}
 .result-footer{text-align:center;font-size:11px;color:var(--gray-brown);padding:16px 0;letter-spacing:1px}
+.result-footer a{color:var(--gray-brown);text-decoration:none;border-bottom:1px dotted var(--gray-brown)}
+.result-footer a:hover{color:var(--gold);border-bottom-color:var(--gold)}
 
 /* Share card (offscreen) */
 .share-card-wrapper{position:fixed;top:-9999px;left:-9999px;z-index:-1}
@@ -138,8 +181,8 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
 .sc-qr{width:64px;height:64px;border:1px solid #E8E0D8;border-radius:4px;padding:2px;background:#fff}
 .sc-qr-text{font-size:11px;color:var(--sub);text-align:left;line-height:1.6}
 
-/* Toast */
-.toast{position:fixed;bottom:40px;left:50%;transform:translateX(-50%) translateY(20px);padding:12px 24px;background:var(--gold);color:#fff;font-size:14px;border-radius:10px;z-index:1000;opacity:0;transition:all .3s;pointer-events:none}
+/* Toast - 白卡+金色左边框 */
+.toast{position:fixed;bottom:40px;left:50%;transform:translateX(-50%) translateY(20px);padding:12px 20px;background:#fff;color:var(--text);font-size:14px;border-radius:10px;z-index:1000;opacity:0;transition:all .3s;pointer-events:none;border-left:3px solid var(--gold);box-shadow:0 4px 20px rgba(0,0,0,.12)}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
 /* Modal */
@@ -160,7 +203,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
   <div class="welcome-content">
     <div class="welcome-icon">
       <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="40" cy="40" r="28" fill="none" stroke="#C4A265" stroke-width="1.5" opacity=".3"/>
+        <circle class="moon-outer-ring" cx="40" cy="40" r="28" fill="none" stroke="#C4A265" stroke-width="1.5" opacity=".3" stroke-dasharray="4 3"/>
         <path d="M40 14C40 14 52 28 52 40C52 52 40 66 40 66C40 66 28 52 28 40C28 28 40 14 40 14Z" fill="none" stroke="#C4A265" stroke-width="1.5"/>
         <circle cx="40" cy="40" r="6" fill="#C4A265" opacity=".2"/>
         <circle cx="40" cy="40" r="3" fill="#C4A265" opacity=".5"/>
@@ -169,7 +212,13 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
     </div>
     <h1 class="welcome-title">解码你的梦境灵魂</h1>
     <p class="welcome-subtitle">每个人的梦，都是潜意识写给你的一封信</p>
-    <div class="welcome-dims"><span>潮汐感</span><span>灼烧感</span><span>折叠度</span><span>觉知力</span><span>通感力</span></div>
+    <div class="welcome-dims">
+      <span>潮汐感<span class="dim-tooltip">梦境画面的深度、频率与清晰程度</span></span>
+      <span>灼烧感<span class="dim-tooltip">梦中情绪的温度与强度</span></span>
+      <span>折叠度<span class="dim-tooltip">梦境世界的奇幻与扭曲程度</span></span>
+      <span>觉知力<span class="dim-tooltip">梦中自我的清醒与掌控程度</span></span>
+      <span>通感力<span class="dim-tooltip">梦境与现实之间的共振程度</span></span>
+    </div>
     <button class="btn-start" onclick="startQuiz()">开始测试</button>
     <p class="welcome-hint">约3分钟 · 20道题 · 20种梦境人格</p>
   </div>
@@ -181,7 +230,8 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
     <button class="btn-back" id="btnBack" onclick="goBack()" disabled>←</button>
     <div class="quiz-progress-wrap">
       <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-      <div class="progress-text" id="progressText">01 / 20</div>
+      <div class="progress-num" id="progressNum">1</div>
+      <div class="progress-total">共20题</div>
     </div>
   </div>
   <div class="quiz-card" id="quizCard">
@@ -205,7 +255,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
     <!-- Header card -->
     <div class="result-card">
       <div class="result-pre">你的梦境灵魂是——</div>
-      <h2 class="result-name" id="resultName">醒梦者</h2>
+      <h2 class="result-name result-name-anim" id="resultName">醒梦者</h2>
       <div class="result-quote" id="resultQuote">你不是在做梦。你是在梦里，做一个清醒的人。</div>
       <div class="result-traits" id="resultTraits"></div>
       <div class="match-pct-wrap">
@@ -216,26 +266,26 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
 
     <!-- Radar (premium) -->
     <div class="premium-overlay" id="premiumBlock">
-      <div class="radar-section" id="radarSection">
+      <div class="radar-section scroll-fade" id="radarSection">
         <div class="radar-title">梦境灵魂图谱</div>
         <div class="radar-svg" id="radarChart"></div>
         <div class="radar-dims" id="radarDims"></div>
       </div>
 
       <!-- Description -->
-      <div class="result-section">
+      <div class="result-section scroll-fade">
         <div class="result-section-title">深度分析</div>
         <div class="result-section-content" id="resultDesc"></div>
       </div>
 
       <!-- Dream features -->
-      <div class="result-section">
+      <div class="result-section scroll-fade">
         <div class="result-section-title">梦境特征</div>
         <div class="result-section-content" id="resultDream"></div>
       </div>
 
       <!-- Match cards -->
-      <div class="match-cards" id="matchCards">
+      <div class="match-cards scroll-fade" id="matchCards">
         <div class="match-card">
           <div class="match-card-label">💕 灵魂契合</div>
           <div class="match-card-emoji" id="soulMatchEmoji">🌙</div>
@@ -251,7 +301,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
       </div>
 
       <!-- Advice -->
-      <div class="result-section">
+      <div class="result-section scroll-fade">
         <div class="result-section-title">觉醒建议</div>
         <div class="result-section-content" id="resultAdvice"></div>
       </div>
@@ -267,7 +317,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
       <button class="btn-share" onclick="generateShareCard()">生成分享卡片</button>
       <button class="btn-restart" onclick="restartQuiz()">重新测试</button>
     </div>
-    <div class="result-footer">© 梦境灵魂测试 · 仅供娱乐参考</div>
+    <div class="result-footer">© 梦境灵魂测试 · 仅供娱乐参考 · <a href="https://github.com/supernc/dream-test" target="_blank" rel="noopener">分享给朋友 ✨</a></div>
   </div>
 </div>
 
@@ -323,14 +373,16 @@ function startQuiz(){
 }
 function renderQuestion(){
   const qs=DATA.questions,q=qs[currentQuestion],total=qs.length;
+  // B2 Fix: 进入第N题时进度条 = (N-1)/total * 100
   document.getElementById('progressFill').style.width=`${(currentQuestion/total)*100}%`;
-  document.getElementById('progressText').textContent=`${String(currentQuestion+1).padStart(2,'0')} / ${total}`;
+  document.getElementById('progressNum').textContent=String(currentQuestion+1);
   document.getElementById('questionNumber').textContent=String(currentQuestion+1).padStart(2,'0');
   document.getElementById('questionText').textContent=q.text;
   document.getElementById('btnBack').disabled=currentQuestion===0;
   const ol=document.getElementById('optionsList');ol.innerHTML='';
   q.options.forEach((opt,idx)=>{
-    const btn=document.createElement('button');btn.className='option-btn';
+    const btn=document.createElement('button');
+    btn.className='option-btn'+(opt.text.length>40?' long-text':'');
     btn.textContent=opt.text;btn.onclick=()=>selectOption(idx);ol.appendChild(btn);
   });
 }
@@ -341,6 +393,7 @@ function selectOption(idx){
   Object.keys(sc).forEach(d=>{dimScores[d]=(dimScores[d]||0)+sc[d]});
   document.querySelectorAll('.option-btn')[idx].classList.add('selected');
   const total=DATA.questions.length;
+  // B2 Fix: 选完后立即跳到 N/total * 100
   document.getElementById('progressFill').style.width=`${((currentQuestion+1)/total)*100}%`;
   setTimeout(()=>{currentQuestion++;currentQuestion>=total?showLoading():transitionNext()},400);
 }
@@ -349,10 +402,16 @@ function goBack(){
   const prev=answers[currentQuestion-1];
   if(prev!==undefined){const sc=DATA.questions[currentQuestion-1].options[prev].scores;Object.keys(sc).forEach(d=>{dimScores[d]-=sc[d]})}
   currentQuestion--;answers.length=currentQuestion;
-  const card=document.getElementById('quizCard');card.classList.add('fade-out');
-  setTimeout(()=>{card.classList.remove('fade-out');card.classList.add('fade-in');renderQuestion();
+  const card=document.getElementById('quizCard');
+  // B4 Fix: 返回时题目从左滑出，新题从右进入
+  card.classList.add('fade-out','going-back');
+  setTimeout(()=>{
+    card.classList.remove('fade-out','going-back');
+    card.classList.add('fade-in','going-back');
+    renderQuestion();
     requestAnimationFrame(()=>{requestAnimationFrame(()=>{card.classList.add('show');
-      setTimeout(()=>{card.classList.remove('fade-in','show');isTransitioning=false},400)})})},250);
+      setTimeout(()=>{card.classList.remove('fade-in','going-back','show');isTransitioning=false},400)})})
+  },250);
 }
 function transitionNext(){
   const card=document.getElementById('quizCard');card.classList.add('fade-out');
@@ -388,9 +447,11 @@ function calculateResult(){
 
 // ===== DISPLAY RESULT =====
 function displayResult(p,matchPct,levels){
-  document.getElementById('resultName').textContent=p.name;
+  // Reset name animation
+  const nameEl=document.getElementById('resultName');
+  nameEl.classList.remove('visible');nameEl.textContent=p.name;
   document.getElementById('resultQuote').textContent=p.quote||'';
-  // Traits
+  // Traits - reset visibility
   const tc=document.getElementById('resultTraits');tc.innerHTML='';
   (p.tags||[]).forEach(t=>{const s=document.createElement('span');s.className='result-trait';s.textContent=t;tc.appendChild(s)});
   // Desc
@@ -422,10 +483,31 @@ function displayResult(p,matchPct,levels){
   else{block.classList.remove('locked');btnWrap.style.display='none'}
   // Show page
   showPage('page-result');
-  // Animate match %
-  setTimeout(()=>animateNumber('matchNum',0,matchPct,1200),300);
+  // 重置 scroll-fade 元素
+  document.querySelectorAll('#page-result .scroll-fade').forEach(el=>el.classList.remove('visible'));
+  // 人格名称入场动画（100ms后）
+  setTimeout(()=>nameEl.classList.add('visible'),100);
+  // 标签错开动画（300ms起，每隔100ms）
+  document.querySelectorAll('.result-trait').forEach((el,i)=>{
+    setTimeout(()=>el.classList.add('visible'),300+i*100);
+  });
+  // 匹配度数字动画延迟 500ms（有仪式感）
+  setTimeout(()=>animateNumber('matchNum',0,matchPct,1200),500);
+  // 初始化 scroll-fade IntersectionObserver
+  initScrollFade();
   // Setup share card
   setupShareCard(p,matchPct,levels);
+}
+
+// ===== SCROLL FADE OBSERVER =====
+function initScrollFade(){
+  const resultPage=document.getElementById('page-result');
+  const items=resultPage.querySelectorAll('.scroll-fade');
+  if(!window.IntersectionObserver){items.forEach(el=>el.classList.add('visible'));return}
+  const obs=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}});
+  },{root:resultPage,threshold:0.15});
+  items.forEach(el=>obs.observe(el));
 }
 
 // ===== RADAR CHART (SVG Pentagon) =====
@@ -452,7 +534,8 @@ function renderRadar(levels){
     const r=Math.max(0.15,groupScores[i])*R;
     dataPts+=`${cx+r*Math.cos(angles[i])},${cy+r*Math.sin(angles[i])} `;
   }
-  svg+=`<polygon points="${dataPts.trim()}" fill="rgba(196,162,101,0.15)" stroke="#C4A265" stroke-width="2"/>`;
+  // 雷达数据多边形加扩张动画类
+  svg+=`<polygon class="radar-data-polygon" points="${dataPts.trim()}" fill="rgba(196,162,101,0.15)" stroke="#C4A265" stroke-width="2"/>`;
   for(let i=0;i<n;i++){
     const r=Math.max(0.15,groupScores[i])*R;
     const x=cx+r*Math.cos(angles[i]),y=cy+r*Math.sin(angles[i]);
@@ -477,12 +560,7 @@ function renderDimReadings(levels){
     '觉知力':'梦中自我的清醒与掌控程度',
     '通感力':'梦境与现实之间的共振程度'
   };
-  const levelText={'H':'偏强','M':'适中','L':'偏弱'};
   DATA.dimension_groups.forEach(g=>{
-    const groupLevels=g.dims.map(d=>levels[d]||'M');
-    const hCount=groupLevels.filter(l=>l==='H').length;
-    const lCount=groupLevels.filter(l=>l==='L').length;
-    const dominant=hCount>=2?'H':(lCount>=2?'L':'M');
     const desc=modelDesc[g.name]||'';
     container.innerHTML+=`<div class="radar-dim-row"><span class="radar-dim-name">${g.name}</span><span class="radar-dim-sep">·</span><span class="radar-dim-desc">${desc}</span></div>`;
   });
@@ -511,22 +589,35 @@ function setupShareCard(p,matchPct,levels){
   }catch(e){}
 }
 
+// html2canvas 懒加载
+let html2canvasLoaded=false;
+function loadHtml2Canvas(cb){
+  if(typeof html2canvas!=='undefined'){cb();return}
+  if(html2canvasLoaded){const t=setInterval(()=>{if(typeof html2canvas!=='undefined'){clearInterval(t);cb()}},50);return}
+  html2canvasLoaded=true;
+  const s=document.createElement('script');
+  s.src='https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+  s.onload=cb;document.head.appendChild(s);
+}
+
 function generateShareCard(){
-  const wrapper=document.getElementById('shareCardWrapper');
-  wrapper.style.position='fixed';wrapper.style.top='0';wrapper.style.left='0';
-  html2canvas(document.getElementById('shareCard'),{backgroundColor:'#FAF8F5',scale:2,useCORS:true,logging:false}).then(canvas=>{
-    wrapper.style.top='-9999px';wrapper.style.left='-9999px';
-    const dataUrl=canvas.toDataURL('image/png');
-    canvas.toBlob(blob=>{
-      if(navigator.share&&navigator.canShare){
-        try{const file=new File([blob],'dream-soul.png',{type:'image/png'});
-          if(navigator.canShare({files:[file]})){navigator.share({files:[file],title:'梦境灵魂测试'}).catch(()=>showImagePreview(dataUrl));return}}catch(e){}
-      }
-      if(!/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)){
-        const link=document.createElement('a');link.download='dream-soul.png';link.href=dataUrl;link.click();showToast('卡片已保存');
-      }else{showImagePreview(dataUrl)}
-    },'image/png');
-  }).catch(()=>{wrapper.style.top='-9999px';wrapper.style.left='-9999px';showToast('生成失败，请重试')});
+  loadHtml2Canvas(()=>{
+    const wrapper=document.getElementById('shareCardWrapper');
+    wrapper.style.position='fixed';wrapper.style.top='0';wrapper.style.left='0';
+    html2canvas(document.getElementById('shareCard'),{backgroundColor:'#FAF8F5',scale:2,useCORS:true,logging:false}).then(canvas=>{
+      wrapper.style.top='-9999px';wrapper.style.left='-9999px';
+      const dataUrl=canvas.toDataURL('image/png');
+      canvas.toBlob(blob=>{
+        if(navigator.share&&navigator.canShare){
+          try{const file=new File([blob],'dream-soul.png',{type:'image/png'});
+            if(navigator.canShare({files:[file]})){navigator.share({files:[file],title:'梦境灵魂测试'}).catch(()=>showImagePreview(dataUrl));return}}catch(e){}
+        }
+        if(!/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)){
+          const link=document.createElement('a');link.download='dream-soul.png';link.href=dataUrl;link.click();showToast('卡片已保存');
+        }else{showImagePreview(dataUrl)}
+      },'image/png');
+    }).catch(()=>{wrapper.style.top='-9999px';wrapper.style.left='-9999px';showToast('生成失败，请重试')});
+  });
 }
 
 function showImagePreview(dataUrl){
@@ -537,6 +628,16 @@ function showImagePreview(dataUrl){
   const cb=document.createElement('div');cb.style.cssText='color:#ccc;font-size:14px;margin-top:16px;padding:8px 28px;border:1px solid #666;border-radius:20px;cursor:pointer';cb.textContent='关闭';cb.onclick=()=>ov.remove();
   ov.onclick=e=>{if(e.target===ov)ov.remove()};
   ov.appendChild(tip);ov.appendChild(img);ov.appendChild(cb);document.body.appendChild(ov);
+}
+
+// ===== RIPPLE EFFECT =====
+function addRipple(e){
+  const btn=e.currentTarget;const rect=btn.getBoundingClientRect();
+  const size=Math.max(rect.width,rect.height);
+  const x=(e.clientX-rect.left)-size/2,y=(e.clientY-rect.top)-size/2;
+  const circle=document.createElement('span');circle.className='ripple-circle';
+  circle.style.cssText=`width:${size}px;height:${size}px;left:${x}px;top:${y}px`;
+  btn.appendChild(circle);setTimeout(()=>circle.remove(),600);
 }
 
 // ===== UTILS =====
@@ -554,7 +655,13 @@ function showPremiumModal(){document.getElementById('premiumModal').classList.ad
 function closePremiumModal(){document.getElementById('premiumModal').classList.remove('show')}
 
 // ===== INIT =====
-document.addEventListener('DOMContentLoaded',()=>{});
+document.addEventListener('DOMContentLoaded',()=>{
+  // Ripple 水波纹：所有按钮点击时
+  document.body.addEventListener('click',e=>{
+    const btn=e.target.closest('button,.btn-start,.btn-premium');
+    if(btn&&!btn.disabled)addRipple(Object.assign(e,{currentTarget:btn}));
+  });
+});
 </script>
 </body>
 </html>
